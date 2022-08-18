@@ -3,10 +3,10 @@
 
 //global variables
 extern long unsigned int turns;
-extern WINDOW *stats, *map, *output;
+extern WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
 
 long unsigned int turns;
-WINDOW *stats, *map, *output;
+WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
 
 typedef struct Monster {
     short unsigned int x;

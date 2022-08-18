@@ -29,7 +29,7 @@ void move_hero(dir a) {
     }
     if (a == UPRIGHT) {
         hero.x++;
-        hero.y++;
+        hero.y--;
     }
     if (a == UPLEFT) {
         hero.x--;
