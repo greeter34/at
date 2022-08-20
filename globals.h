@@ -13,6 +13,7 @@ typedef struct Monster {
     short unsigned int y;
     short unsigned int z;
     signed int hp;
+    signed int max_hp;
     char name[10];
     long unsigned int gold;
 } monster;
@@ -45,5 +46,8 @@ void init_windows();
 void panic();
 void quit();
 void update_windows();
+
+//checks.c
+void checks();
 
 #endif

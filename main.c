@@ -39,8 +39,8 @@ void move_hero(dir a) {
         hero.x--;
         hero.y++;
     }
+    checks();
     blank();
-    turns++;
     return;
 }
 
@@ -78,7 +78,7 @@ void loop() {
     wmove(map, hero.y, hero.x);
     wprintw(map, "@");
     mvwprintw(stats, 1, 1, "Turns: %d", turns);
-    
+    mvwprintw(stats, 2, 1, "HP: %d / %d ", hero.hp, hero.max_hp);
     //non-movement commands
     if (todo == 'q') { //quit
         quit();

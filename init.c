@@ -7,7 +7,7 @@
 #define MAP_MAX_Y 80
 
 void init_windows() { //create windows for the map, hero stats, and output messages
-    int mapx = 0, mapy = 0; //used to store maximum width and height of map
+    int mapx = 0, mapy = 0, i = 0; //used to store maximum width and height of map
     if ((output = initscr()) == NULL) panic(2);
     if ((map = initscr()) == NULL) panic(2);
     if ((stats = initscr()) == NULL) panic(2);
@@ -21,12 +21,15 @@ void init_windows() { //create windows for the map, hero stats, and output messa
     output_border = newwin(6, (COLS - 1), 1, 1);
     map_border = newwin(mapx, mapy, 7, 1);
     stats_border = newwin(4, (COLS - 1), (LINES - 6), 1);
-    output = newwin(7, (COLS - 3), 2, 2);
+    output = newwin(4, (COLS - 3), 2, 2);
     map = newwin((mapx - 2), (mapy - 2), 8, 2);
-    stats = newwin(2, (COLS - 3), (LINES - 6), 2);
+    stats = newwin(3, (COLS - 3), (LINES - 6), 2);
     box(output_border, 0, 0);
     box(map_border, 0, 0);
     box(stats_border, 0, 0);
+    for (i = 0; i < 100; i++) {
+        wprintw(output, "\n"); //to scroll to bottom of output window
+    }
     return;
 }
 
@@ -34,6 +37,8 @@ void init_hero() { //initialize hero
     hero.gold = 0;
     hero.x = 10;
     hero.y = 10;
+    hero.hp = 15;
+    hero.max_hp = 12; //deliberately lower than hp for bug testing
     wmove(map, hero.y, hero.x);
     wattron(map, A_REVERSE);
     wprintw(map, "@");
@@ -45,6 +50,7 @@ void init_game() { //initialize game variables
     initscr();
     cbreak();
     noecho();
+    idlok(output, TRUE);
     scrollok(output, TRUE);
     scrollok(map, FALSE);
     scrollok(stats, FALSE);
@@ -67,20 +73,23 @@ void init_game() { //initialize game variables
 void panic(int error) { //attempt to close the program gracefully after an unrecoverable error
     endwin();
     if (error == 1) {printf("This terminal does not have full color support, or initializing colors has failed.\n");}
-    if (error == 2) {printf("Unable to properly initialize screen. You may have low system memory.\n");}
-    if (error == 3) {printf("Unable to properly update screen. You may have low system memory.\n");}
-    if (error == 4) {printf("Unable to properly implement screen. You likely have low system memory.\n");}
-    if (error == 5) {
+    else if (error == 2) {printf("Unable to properly initialize screen. You may have low system memory.\n");}
+    else if (error == 3) {printf("Unable to properly update screen. You may have low system memory.\n");}
+    else if (error == 4) {printf("Unable to properly implement screen. You likely have low system memory.\n");}
+    else if (error == 5) {
         printf("Unable to exit curses mode. Please restart your terminal.\n");
         printw("Unable to exit curses mode. Please restart your terminal.\n");
     }
+    else if (error == 6) {printf("Unable to scroll output window. You likely have low system memory.\n");}
+    else if (error == 7) {printf("Unable to configure game output properly. You may have low system memory.\n");}
+    else if (error == 8) {printf("This terminal is not equipped for proper game output. Please try a different terminal.\n");}
     else {printf("An unspecified unrecoverable error has occurred.\nAn attempt was made to save your game.\nYou may want to reboot your computer before proceeding.");}
     exit(EXIT_FAILURE);
     return; //this should never be called
 }
 
 void quit() { //attempt to close the program gracefully at the user's request
-    if (wprintw(output, "Thank you for playing. Press any key to quit...\n") == ERR) panic(4);
+    if (wprintw(output, "\nThank you for playing. Press any key to quit...") == ERR) panic(4);
     update_windows();
     getch();
     if (endwin() == ERR) panic(5);
@@ -95,10 +104,10 @@ void update_windows() {
     if (wnoutrefresh(stats) == ERR) panic(3);
     if (wnoutrefresh(map) == ERR) panic(3);
     if (wnoutrefresh(output) == ERR) panic(3);
+    if (wnoutrefresh(output_border) == ERR) panic(4);
     if (!called) {
         if (wnoutrefresh(stats_border) == ERR) panic(4);
         if (wnoutrefresh(map_border) == ERR) panic(4);
-        if (wnoutrefresh(output_border) == ERR) panic(4);
         called = TRUE;
     }
     if (doupdate() == ERR) panic(5);
