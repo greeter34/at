@@ -29,7 +29,7 @@ void init_windows() { //create windows for the map, hero stats, and output messa
     box(stats_border, 0, 0);
     for (i = 0; i < 100; i++) {
         wprintw(output, "\n"); //to scroll to bottom of output window
-    }
+    }mvwprintw(map, hero.y, hero.x, "@");
     return;
 }
 
@@ -102,10 +102,10 @@ void update_windows() {
     if (wnoutrefresh(stdscr) == ERR) panic(3);
     if (wnoutrefresh(curscr) == ERR) panic(3);
     if (wnoutrefresh(stats) == ERR) panic(3);
-    if (wnoutrefresh(map) == ERR) panic(3);
     if (wnoutrefresh(output) == ERR) panic(3);
-    if (wnoutrefresh(output_border) == ERR) panic(4);
+    if (wnoutrefresh(map) == ERR) panic(3);
     if (!called) {
+        if (wnoutrefresh(output_border) == ERR) panic(4);
         if (wnoutrefresh(stats_border) == ERR) panic(4);
         if (wnoutrefresh(map_border) == ERR) panic(4);
         called = TRUE;

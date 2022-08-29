@@ -36,8 +36,10 @@ monster hero;
 //main.c
 int main();
 void loop();
+void look();
 void blank();
 void move_hero(dir a);
+void move_cursor(dir a);
 
 //init.c
 void init_game();
