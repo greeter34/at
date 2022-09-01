@@ -29,7 +29,13 @@ void init_windows() { //create windows for the map, hero stats, and output messa
     box(stats_border, 0, 0);
     for (i = 0; i < 100; i++) {
         wprintw(output, "\n"); //to scroll to bottom of output window
-    }mvwprintw(map, hero.y, hero.x, "@");
+        update_windows();
+    }
+    for (i = 0; i < 2000; i++) {
+        wprintw(map, "."); //fill the map with movable space
+        wprintw(output, "\nAdded dot %d", i);
+        update_windows();
+    }
     return;
 }
 
@@ -41,12 +47,12 @@ void init_hero() { //initialize hero
     hero.max_hp = 12; //deliberately lower than hp for bug testing
     wmove(map, hero.y, hero.x);
     wattron(map, A_REVERSE);
-    wprintw(map, "@");
     return;
 }
 
 void init_game() { //initialize game variables
     turns = 0;
+    valid = false;
     initscr();
     cbreak();
     noecho();
@@ -68,24 +74,6 @@ void init_game() { //initialize game variables
     init_hero();
     update_windows();
     return;
-}
-
-void panic(int error) { //attempt to close the program gracefully after an unrecoverable error
-    endwin();
-    if (error == 1) {printf("This terminal does not have full color support, or initializing colors has failed.\n");}
-    else if (error == 2) {printf("Unable to properly initialize screen. You may have low system memory.\n");}
-    else if (error == 3) {printf("Unable to properly update screen. You may have low system memory.\n");}
-    else if (error == 4) {printf("Unable to properly implement screen. You likely have low system memory.\n");}
-    else if (error == 5) {
-        printf("Unable to exit curses mode. Please restart your terminal.\n");
-        printw("Unable to exit curses mode. Please restart your terminal.\n");
-    }
-    else if (error == 6) {printf("Unable to scroll output window. You likely have low system memory.\n");}
-    else if (error == 7) {printf("Unable to configure game output properly. You may have low system memory.\n");}
-    else if (error == 8) {printf("This terminal is not equipped for proper game output. Please try a different terminal.\n");}
-    else {printf("An unspecified unrecoverable error has occurred.\nAn attempt was made to save your game.\nYou may want to reboot your computer before proceeding.");}
-    exit(EXIT_FAILURE);
-    return; //this should never be called
 }
 
 void quit() { //attempt to close the program gracefully at the user's request

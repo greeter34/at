@@ -4,9 +4,11 @@
 //global variables
 extern long unsigned int turns;
 extern WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
+extern bool valid; //is an action that advances the number of turns valid?
 
 long unsigned int turns;
 WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
+bool valid;
 
 typedef struct Monster {
     short unsigned int x;
@@ -45,11 +47,13 @@ void move_cursor(dir a);
 void init_game();
 void init_hero();
 void init_windows();
-void panic();
 void quit();
 void update_windows();
 
 //checks.c
 void checks();
+void what_is_here(char a);
+void impossible(int error);
+void panic(int error);
 
 #endif

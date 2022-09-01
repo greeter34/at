@@ -4,7 +4,7 @@
 void blank() { //blanks current hero position to prepare for moving him
     wmove(map, hero.y, hero.x); //move the cursor to be on the player
     wattroff(map, A_REVERSE);
-    wprintw(map, " ");
+    wprintw(map, ".");
     wmove(map, hero.y, hero.x);
     wattron(map, A_REVERSE);
     update_windows();
@@ -41,38 +41,37 @@ void move_hero(dir a) {
         hero.x--;
         hero.y++;
     }
-    blank();
     return;
 }
 
 //the following two functions do not work properly yet and likely require extensive modifcations
 void move_cursor(dir a) {
-    int x = 20, y = 20;
+    int x = 0, y = 0;
     getyx(map, y, x);
     switch(a) {
         case UP:
-            wmove(map, hero.y--, hero.x);
+            wmove(map, --hero.y, hero.x);
             break;
         case DOWN:
-            wmove(map, hero.y++, hero.x);
+            wmove(map, ++hero.y, hero.x);
             break;
         case LEFT:
-            wmove(map, hero.y, hero.x--);
+            wmove(map, hero.y, --hero.x);
             break;
         case RIGHT:
-            wmove(map, hero.y, hero.x++);
+            wmove(map, hero.y, ++hero.x);
             break;
         case DOWNRIGHT:
-            wmove(map, hero.y++, hero.x++);
+            wmove(map, ++hero.y, ++hero.x);
             break;
         case UPRIGHT:
-            wmove(map, hero.y--, hero.x++);
+            wmove(map, --hero.y, ++hero.x);
             break;
         case UPLEFT:
-            wmove(map, hero.y--, hero.x--);
+            wmove(map, --hero.y, --hero.x);
             break;
         case DOWNLEFT:
-            wmove(map, hero.y++, hero.x--);
+            wmove(map, ++hero.y, --hero.x);
             break;
     }
     update_windows();
@@ -80,7 +79,9 @@ void move_cursor(dir a) {
 }
 
 void look() { //this code needs work
-    char todo = 0, x = hero.x, y = hero.y;
+    char todo = 0, x = hero.x, y = hero.y, here = 0;
+    wprintw(map, "@"); //for some reason the hero always disappears here if we don't reprint the hero
+    wmove(map, hero.y, hero.x); //put the cursor back to where the hero should be
     curs_set(1);
     while ((todo = wgetch(map)) != 'q') {
         if (todo == 'k') { //move up
@@ -107,6 +108,9 @@ void look() { //this code needs work
         if (todo == 'b') { //move down and left
             move_cursor(DOWNLEFT);
         }
+        if (todo == '.') {
+            what_is_here(winch(map));
+        }
         update_windows();
     }
     curs_set(0);
@@ -123,32 +127,40 @@ void loop() {
     //movement commands
     if (todo == 'k') { //move up
         move_hero(UP);
+        valid = true;
     }
     if (todo == 'j') { //move down
         move_hero(DOWN);
+        valid = true;
     }
     if (todo == 'h') { //move left
         move_hero(LEFT);
+        valid = true;
     }
     if (todo == 'l') { //move right
         move_hero(RIGHT);
+        valid = true;
     }
     if (todo == 'n') { //move down and right
         move_hero(DOWNRIGHT);
+        valid = true;
     }
     if (todo == 'u') { //move up and right
         move_hero(UPRIGHT);
+        valid = true;
     }
     if (todo == 'y') { //move up and left
         move_hero(UPLEFT);
+        valid = true;
     }
     if (todo == 'b') { //move down and left
         move_hero(DOWNLEFT);
+        valid = true;
     }
     
     //non-movement commands
     if (todo == ';') {
-            wmove(map, hero.y, (hero.x - 1));
+            //wmove(map, hero.y, hero.x);
             look();
     }
 
