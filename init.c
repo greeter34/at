@@ -1,6 +1,7 @@
 #include <curses.h>
 #include <stdlib.h>
 #include <time.h>
+#include <time.h>
 #include "globals.h"
 
 #define MAP_MAX_X 25
@@ -31,13 +32,26 @@ void init_windows() { //create windows for the map, hero stats, and output messa
         wprintw(output, "\n"); //to scroll to bottom of output window
         update_windows();
     }
-    for (i = 0; i < 2000; i++) {
-        wprintw(map, "."); //fill the map with movable space
-        wprintw(output, "\nAdded dot %d", i);
-        update_windows();
+    generate_level(); //this generates only the first level, though the function will be used to generate later levels
+    return;
+}
+
+void generate_level () {
+    int x = 0, y = 0, i = 0, chars = 0, random_int = 0;
+    getmaxyx(map, y, x);
+    chars = (y * x);
+    for (i = 0; i < chars; i++) {
+        random_int = rand();
+        if ((random_int % 10) > 3) {
+            wprintw(map, ".");
+        }
+        else {
+            wprintw(map, " ");
+        }
     }
     return;
 }
+    
 
 void init_hero() { //initialize hero
     hero.gold = 0;
@@ -53,6 +67,7 @@ void init_hero() { //initialize hero
 void init_game() { //initialize game variables
     turns = 0;
     valid = false;
+    srand(time(NULL));
     initscr();
     cbreak();
     noecho();

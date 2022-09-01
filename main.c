@@ -11,8 +11,10 @@ void blank() { //blanks current hero position to prepare for moving him
     return;
 }    
 
-void move_hero(dir a) {
+bool move_hero(dir a) {
     int x = 0, y = 0;
+    getyx(map, y, x); //store current coordinates of the hero in case the hero cannot move to the desired square
+    char onscreen = '0';
     if (a == UP) {
         hero.y--;
     }
@@ -41,10 +43,17 @@ void move_hero(dir a) {
         hero.x--;
         hero.y++;
     }
-    return;
+    wmove(map, hero.y, hero.x);
+    onscreen = winch(map);
+    if (onscreen == ' ') {
+        hero.y = y;
+        hero.x = x;
+        wprintw(output, "\nOuch. You bump into solid rock.");
+        return false;
+    }
+    return true;
 }
 
-//the following two functions do not work properly yet and likely require extensive modifcations
 void move_cursor(dir a) {
     int x = 0, y = 0;
     getyx(map, y, x);
@@ -78,7 +87,7 @@ void move_cursor(dir a) {
     return;
 }
 
-void look() { //this code needs work
+void look() {
     char todo = 0, x = hero.x, y = hero.y, here = 0;
     wprintw(map, "@"); //for some reason the hero always disappears here if we don't reprint the hero
     wmove(map, hero.y, hero.x); //put the cursor back to where the hero should be
@@ -122,39 +131,40 @@ void look() { //this code needs work
 void loop() {
     update_windows(); //populate any relevant updates to the screen
     char todo = '0';
+    bool moved = false;
     todo = wgetch(map);
     blank();
     //movement commands
     if (todo == 'k') { //move up
-        move_hero(UP);
+        moved = move_hero(UP);
         valid = true;
     }
     if (todo == 'j') { //move down
-        move_hero(DOWN);
+        moved = move_hero(DOWN);
         valid = true;
     }
     if (todo == 'h') { //move left
-        move_hero(LEFT);
+        moved = move_hero(LEFT);
         valid = true;
     }
     if (todo == 'l') { //move right
-        move_hero(RIGHT);
+        moved = move_hero(RIGHT);
         valid = true;
     }
     if (todo == 'n') { //move down and right
-        move_hero(DOWNRIGHT);
+        moved = move_hero(DOWNRIGHT);
         valid = true;
     }
     if (todo == 'u') { //move up and right
-        move_hero(UPRIGHT);
+        moved = move_hero(UPRIGHT);
         valid = true;
     }
     if (todo == 'y') { //move up and left
-        move_hero(UPLEFT);
+        moved = move_hero(UPLEFT);
         valid = true;
     }
     if (todo == 'b') { //move down and left
-        move_hero(DOWNLEFT);
+        moved = move_hero(DOWNLEFT);
         valid = true;
     }
     
@@ -164,7 +174,7 @@ void loop() {
             look();
     }
 
-    checks();
+    checks(moved);
     mvwprintw(stats, 1, 1, "Turns: %d", turns);
     mvwprintw(stats, 2, 1, "HP: %d / %d ", hero.hp, hero.max_hp);
     //non-movement commands

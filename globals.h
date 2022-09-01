@@ -40,7 +40,7 @@ int main();
 void loop();
 void look();
 void blank();
-void move_hero(dir a);
+bool move_hero(dir a);
 void move_cursor(dir a);
 
 //init.c
@@ -49,9 +49,10 @@ void init_hero();
 void init_windows();
 void quit();
 void update_windows();
+void generate_level();
 
 //checks.c
-void checks();
+void checks(bool moved);
 void what_is_here(char a);
 void impossible(int error);
 void panic(int error);

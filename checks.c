@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "globals.h"
 
-void checks() {
+void checks(bool moved) {
     if (hero.hp > hero.max_hp) hero.hp = hero.max_hp;
     idlok(output, TRUE);
     scrollok(output, TRUE);
-    if (valid) {
+    if (valid && moved) {
         turns++;
         valid = false;
     }
@@ -21,17 +21,19 @@ void what_is_here(char a) {
     else if (a == '@') {
         wprintw(output, "@ - A human, elf, or heroic character");
     }
+    else if (a == ' ') {
+        wprintw(output, "  - Solid rock");
+    }
     else {
         wprintw(output, "%c - Undefined.", a);
-        //impossible function call here
+        impossible(0);
     }
     return;
 }
 
 void impossible(int error) { //function for handling impossible events, but permit the game to continue. to interrupt the game, call panic() instead
-    wprintw(output, "\n");
     if (error == 0) {
-        wprintw(output, "There was an error with the look command. Maybe you should save/quit?");
+        wprintw(output, "\nThere was an error with the look command. Maybe you should save/quit?");
     }
     return;
 }
