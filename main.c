@@ -1,15 +1,14 @@
 #include <curses.h>
-#include "globals.h"
+#include <stdlib.h>
+#include "globals.h"  
 
-void blank() { //blanks current hero position to prepare for moving him
-    wmove(map, hero.y, hero.x); //move the cursor to be on the player
-    wattroff(map, A_REVERSE);
-    wprintw(map, ".");
-    wmove(map, hero.y, hero.x);
-    wattron(map, A_REVERSE);
-    update_windows();
-    return;
-}    
+int roll(int dice, int max) {
+    int to_return = 0, i = 0;
+    for (i = 0; i < dice; i++) {
+        to_return = to_return + ((rand() % max) + 1);
+    }
+    return to_return;
+}
 
 bool move_hero(dir a) {
     int x = 0, y = 0;
@@ -47,7 +46,7 @@ bool move_hero(dir a) {
     onscreen = winch(map);
     if (onscreen == ' ') {
         hero.y = y;
-        hero.x = x;
+        hero.x = --x; //not sure why we need to reduce x by one here. if someone can explain this to me please do so
         wprintw(output, "\nOuch. You bump into solid rock.");
         return false;
     }
@@ -129,11 +128,12 @@ void look() {
 }
 
 void loop() {
+    draw_map(hero.z);
+    mvwprintw(map, hero.y, hero.x, "@");
     update_windows(); //populate any relevant updates to the screen
     char todo = '0';
     bool moved = false;
     todo = wgetch(map);
-    blank();
     //movement commands
     if (todo == 'k') { //move up
         moved = move_hero(UP);
@@ -175,13 +175,12 @@ void loop() {
     }
 
     checks(moved);
-    mvwprintw(stats, 1, 1, "Turns: %d", turns);
+    mvwprintw(stats, 1, 1, "Turns: %d\tLvl: %d", turns, hero.z + 1);
     mvwprintw(stats, 2, 1, "HP: %d / %d ", hero.hp, hero.max_hp);
     //non-movement commands
     if (todo == 'q') { //quit
         quit();
     }
-    mvwprintw(map, hero.y, hero.x, "@");
     loop();
     return; //this should never be called
 }

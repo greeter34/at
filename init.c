@@ -1,11 +1,9 @@
 #include <curses.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include <time.h>
 #include "globals.h"
-
-#define MAP_MAX_X 25
-#define MAP_MAX_Y 80
 
 void init_windows() { //create windows for the map, hero stats, and output messages
     int mapx = 0, mapy = 0, i = 0; //used to store maximum width and height of map
@@ -37,18 +35,33 @@ void init_windows() { //create windows for the map, hero stats, and output messa
 }
 
 void generate_level () {
-    int x = 0, y = 0, i = 0, chars = 0, random_int = 0;
+    int x = 0, y = 0, i_x = 0, i_y = 0, chars = 0, random_int = 0;
+    FILE *rand_ints;
+    rand_ints = fopen("rand_ints", "w+");
     getmaxyx(map, y, x);
-    chars = (y * x);
-    for (i = 0; i < chars; i++) {
-        random_int = rand();
-        if ((random_int % 10) > 3) {
-            wprintw(map, ".");
-        }
-        else {
-            wprintw(map, " ");
+    y--;
+    x--; //these calls seem to be necessary or we overflow the screen output
+    for (i_y = 0; i_y < y; i_y++) {
+        for (i_x = 0; i_x < x; i_x++) {
+            random_int = roll(1, 100);
+            fprintf(rand_ints, "%d\n", random_int);
+            update_windows();
+            //following code is proof of concept. i plan extensive rewrites to this
+            if (random_int > 30 && random_int < 97) {
+                maps[hero.z][i_x][i_y] = '.';
+            }
+            else if (random_int == 98) {
+                maps[hero.z][i_x][i_y] = '}';
+            }
+            else if (random_int == 97) {
+                maps[hero.z][i_x][i_y] = '#';
+            }
+            else {
+                maps[hero.z][i_x][i_y] = ' ';
+            }
         }
     }
+    fclose(rand_ints);
     return;
 }
     
@@ -57,6 +70,7 @@ void init_hero() { //initialize hero
     hero.gold = 0;
     hero.x = 10;
     hero.y = 10;
+    hero.z = 0;
     hero.hp = 15;
     hero.max_hp = 12; //deliberately lower than hp for bug testing
     wmove(map, hero.y, hero.x);
