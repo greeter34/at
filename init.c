@@ -36,15 +36,12 @@ void init_windows() { //create windows for the map, hero stats, and output messa
 
 void generate_level () {
     int x = 0, y = 0, i_x = 0, i_y = 0, chars = 0, random_int = 0;
-    FILE *rand_ints;
-    rand_ints = fopen("rand_ints", "w+");
     getmaxyx(map, y, x);
     y--;
     x--; //these calls seem to be necessary or we overflow the screen output
     for (i_y = 0; i_y < y; i_y++) {
         for (i_x = 0; i_x < x; i_x++) {
             random_int = roll(1, 100);
-            fprintf(rand_ints, "%d\n", random_int);
             update_windows();
             //following code is proof of concept. i plan extensive rewrites to this
             if (random_int > 30 && random_int < 97) {
@@ -61,7 +58,6 @@ void generate_level () {
             }
         }
     }
-    fclose(rand_ints);
     return;
 }
     
