@@ -34,50 +34,25 @@ void init_windows() { //create windows for the map, hero stats, and output messa
     return;
 }
 
-void generate_level () {
-    int x = 0, y = 0, i_x = 0, i_y = 0, chars = 0, random_int = 0;
-    getmaxyx(map, y, x);
-    y--;
-    x--; //these calls seem to be necessary or we overflow the screen output
-    for (i_y = 0; i_y < y; i_y++) {
-        for (i_x = 0; i_x < x; i_x++) {
-            random_int = roll(1, 100);
-            update_windows();
-            //following code is proof of concept. i plan extensive rewrites to this
-            if (random_int > 30 && random_int < 97) {
-                maps[hero.z][i_x][i_y] = '.';
-            }
-            else if (random_int == 98) {
-                maps[hero.z][i_x][i_y] = '}';
-            }
-            else if (random_int == 97) {
-                maps[hero.z][i_x][i_y] = '#';
-            }
-            else {
-                maps[hero.z][i_x][i_y] = ' ';
-            }
-        }
-    }
-    return;
-}
-    
-
 void init_hero() { //initialize hero
+    hero.level = 1;
     hero.gold = 0;
-    hero.x = 10;
-    hero.y = 10;
+    hero.x = roll(2, 10);
+    hero.y = roll(2, 10);
     hero.z = 0;
     hero.hp = 15;
     hero.max_hp = 12; //deliberately lower than hp for bug testing
     wmove(map, hero.y, hero.x);
-    wattron(map, A_REVERSE);
     return;
 }
 
 void init_game() { //initialize game variables
+    int i = 0;
     turns = 0;
+    ttl_objects = 0;
     valid = false;
-    srand(time(NULL));
+    seed = time(NULL);
+    srand(seed);
     initscr();
     cbreak();
     noecho();
@@ -86,10 +61,10 @@ void init_game() { //initialize game variables
     scrollok(map, FALSE);
     scrollok(stats, FALSE);
     curs_set(0);
-    start_color();
-    if (!has_colors) {
+    if (has_colors() == FALSE) {
         panic(1);
     }
+    start_color();
     init_color(COLOR_BLACK, 0, 0, 0);
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
     wattron(map, COLOR_PAIR(1));
@@ -97,6 +72,9 @@ void init_game() { //initialize game variables
     srand(time(NULL));
     init_windows();
     init_hero();
+    for (i = 0; i < 50; i++) {
+        been_here[i] = false;
+    }
     update_windows();
     return;
 }
