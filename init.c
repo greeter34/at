@@ -35,7 +35,7 @@ void init_windows() { //create windows for the map, hero stats, and output messa
 }
 
 void init_hero() { //initialize hero
-    hero.level = 1;
+    hero.exp = 1;
     hero.gold = 0;
     hero.x = roll(2, 10);
     hero.y = roll(2, 10);
@@ -50,6 +50,7 @@ void init_game() { //initialize game variables
     int i = 0;
     turns = 0;
     ttl_objects = 0;
+    ttl_monsters = 0;
     valid = false;
     seed = time(NULL);
     srand(seed);

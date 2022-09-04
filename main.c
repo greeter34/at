@@ -51,16 +51,22 @@ void loop() {
     }
     update_windows(); //we can never do this enough with curses apparently
     //non-movement commands
-    if (todo == ';') {
+    if (todo == ';') { //far look
         look();
     }
-    if (todo == ':') {
+    if (todo == ':') { //near look
         what_is_here();
+    }
+    if (todo == ',') { //take
+        take();
+    }
+    if (todo == 'i') { //display inventory
+        print_inventory();
     }
 
     checks(moved);
     mvwprintw(stats, 1, 1, "Turns: %d\tLvl: %d", turns, hero.z + 1);
-    mvwprintw(stats, 2, 1, "HP: %d / %d ", hero.hp, hero.max_hp);
+    mvwprintw(stats, 2, 1, "HP: %d / %d\tGold: %d", hero.hp, hero.max_hp, hero.gold);
     //non-movement commands
     if (todo == 'q') { //quit
         quit();

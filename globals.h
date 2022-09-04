@@ -8,27 +8,35 @@
 #define MAP_MAX_Y 80
 
 //global variables
-extern long unsigned int turns, seed, ttl_objects;
+extern long unsigned int turns, seed, ttl_objects, ttl_monsters;
 extern WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
 extern bool valid; //is an action that advances the number of turns valid?
 extern char maps[FLOORS][MAP_MAX_X][MAP_MAX_Y];
 extern bool been_here[50];
 
-long unsigned int turns, seed, ttl_objects;
+long unsigned int turns, seed, ttl_objects, ttl_monsters;
 WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
 bool valid;
 char maps[FLOORS][MAP_MAX_X][MAP_MAX_Y];
 bool been_here[50];
 
+//global structure definitions
+
 typedef struct Monster {
     short unsigned int x;
     short unsigned int y;
     short unsigned int z;
+    long unsigned int id;
+    unsigned int exp;
     signed int hp;
     signed int max_hp;
     char name[10];
     long unsigned int gold;
-    short unsigned int level;
+    bool conf;
+    bool stun;
+    bool paralyzed;
+    bool blind;
+    bool deaf;
 } monster;
 
 typedef struct Object {
@@ -37,6 +45,8 @@ typedef struct Object {
     short unsigned int x;
     short unsigned int y;
     short unsigned int z;
+    long unsigned int id;
+    long signed int owner; //matches ID of monster that owns the item, if any. the hero is always 0
     char glyph;
     char buc;
     bool exists;
@@ -46,6 +56,11 @@ typedef struct Object {
     bool edible;
 } object;
 
+typedef struct Inventory {
+    int id;
+    char item[52][1][50]; //maximum 52 inventory items, one per each letter case of alphabet, one character to store which item is which letter, 50 chars for name
+} items;
+//global structures
 extern object *objects;
 
 typedef enum Direction {
@@ -90,6 +105,9 @@ void generate_level();
 
 //objects.c
 void create_object(int x, int y, int z, char glyph);
+void destroy_object(int a);
+void print_inventory();
+void take();
 
 //look.c
 void what_is_there(char a);
