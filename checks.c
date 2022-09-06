@@ -41,6 +41,7 @@ void panic(int error) { //attempt to close the program gracefully after an unrec
     else if (error == 7) {printf("Unable to configure game output properly. You may have low system memory.\n");}
     else if (error == 8) {printf("This terminal is not equipped for proper game output. Please try a different terminal.\n");}
     else if (error == 9) {printf("Level generation called on level that already exists. This is a bug.\n");}
+    else if (error == 10) {printw("Unable to properly clear screen. You may have low system memory.\n");}
     else {printf("An unspecified unrecoverable error has occurred.\nAn attempt was made to save your game.\nYou may want to reboot your computer before proceeding.");}
     exit(EXIT_FAILURE);
     return; //this should never be called

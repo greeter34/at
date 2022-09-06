@@ -7,6 +7,11 @@
 
 void init_windows() { //create windows for the map, hero stats, and output messages
     int mapx = 0, mapy = 0, i = 0; //used to store maximum width and height of map
+    init_color(COLOR_BLACK, 0, 0, 0);
+    init_pair(1, COLOR_WHITE, COLOR_BLACK);
+    if (clear() == ERR) panic(10);
+    wattron(map, COLOR_PAIR(1));
+    bkgd(COLOR_PAIR(1));
     if ((output = initscr()) == NULL) panic(2);
     if ((map = initscr()) == NULL) panic(2);
     if ((stats = initscr()) == NULL) panic(2);
@@ -22,14 +27,10 @@ void init_windows() { //create windows for the map, hero stats, and output messa
     stats_border = newwin(4, (COLS - 1), (LINES - 6), 1);
     output = newwin(4, (COLS - 3), 2, 2);
     map = newwin((mapx - 2), (mapy - 2), 8, 2);
-    stats = newwin(3, (COLS - 3), (LINES - 6), 2);
+    stats = newwin(2, (COLS - 3), (LINES - 5), 2);
     box(output_border, 0, 0);
     box(map_border, 0, 0);
     box(stats_border, 0, 0);
-    for (i = 0; i < 100; i++) {
-        wprintw(output, "\n"); //to scroll to bottom of output window
-        update_windows();
-    }
     generate_level(); //this generates only the first level, though the function will be used to generate later levels
     return;
 }
@@ -57,7 +58,7 @@ void init_game() { //initialize game variables
     initscr();
     cbreak();
     noecho();
-    idlok(output, TRUE);
+    clearok(output, TRUE);
     scrollok(output, TRUE);
     scrollok(map, FALSE);
     scrollok(stats, FALSE);
@@ -66,10 +67,6 @@ void init_game() { //initialize game variables
         panic(1);
     }
     start_color();
-    init_color(COLOR_BLACK, 0, 0, 0);
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    wattron(map, COLOR_PAIR(1));
-    bkgd(COLOR_PAIR(1));
     srand(time(NULL));
     init_windows();
     init_hero();
@@ -80,7 +77,7 @@ void init_game() { //initialize game variables
     return;
 }
 
-void quit() { //attempt to close the program gracefully at the user's request
+void quit() { //attempt to close the program gracefully at the user's request. the graceful stuff is not coded yet though
     if (wprintw(output, "\nThank you for playing. Press any key to quit...") == ERR) panic(4);
     update_windows();
     getch();

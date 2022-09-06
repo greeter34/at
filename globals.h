@@ -57,11 +57,13 @@ typedef struct Object {
 } object;
 
 typedef struct Inventory {
-    int id;
-    char item[52][1][50]; //maximum 52 inventory items, one per each letter case of alphabet, one character to store which item is which letter, 50 chars for name
-} items;
+    int amount;
+    char name[50]; //name as it should appear in inventory. longer than item name as this can be shown as "uncursed thing" or similar
+} inventory; //array of 52 items for maximum number of inventory slots
+
 //global structures
 extern object *objects;
+extern inventory items[52];
 
 typedef enum Direction {
     UP,
@@ -76,6 +78,7 @@ typedef enum Direction {
 
 monster hero;
 object *objects;
+inventory items[52];
 
 //function definitions
 

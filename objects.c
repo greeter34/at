@@ -1,6 +1,7 @@
 #include <curses.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "globals.h"
 
 void create_object(int z, int x, int y, char glyph) {
@@ -43,28 +44,87 @@ void destroy_object(int a) {
     objects[a].z = 101; //this puts it out of bounds
     objects[a].exists = FALSE; //this prevents interaction by functions which check this
     objects[a].glyph = '9'; //this assigns an invalid glyph to the object
+    return;
 }
 
 void print_inventory() {
-    int i = 0;
+    int i = 0, line = 1;
     bool has_objects = FALSE;
-    for(i = 0; i < ttl_objects; i++) {
-        if (objects[i].owner == 0) {
-            wprintw(output, "\n%s", objects[i].name);
+    //following code is broken. do not use
+    /*
+    char prefix[10];
+    for(i = 0; i < 52; i++) {
+        if (items[i].amount > 0) {
+            if (items[i].amount == 1) {
+                strcpy(prefix, "a(n)");
+                wprintw(output, "\n%s %s (item %d in inventory)", prefix, items[i].name, i);
+            }
+            else {
+                //strcpy(prefix, (char *) items[i].amount);
+                sprintf(prefix, "%d", items[i].amount);
+                wprintw(output, "\n%s $ss", prefix, items[i].name);                
+            }
             wrefresh(output);
             has_objects = true;
         }
     }
-    if (has_objects = FALSE) {
+    if (!has_objects) {
         wprintw(output, "\nYou have no inventory!");
+        wrefresh(output);
     }
+    */
+    for(i = 0; i < ttl_objects; i++) {
+        if (objects[i].owner == 0) {
+            has_objects = true;
+            break;
+        }
+    }
+    if (has_objects) {
+        WINDOW *inventory = newwin(28, 52, 4, 30);
+        box(inventory, 0, 0);
+        wmove(inventory, 1, 1);
+        for (i = 0; i < ttl_objects; i++) {
+            if (objects[i].owner == 0) {
+                wprintw(inventory, "%s", objects[i].name);
+                line++;
+                wmove(inventory, line, 1);
+                wrefresh(inventory);
+            }
+        }
+        getch(); //so user has time to look at inventory. we don't care about this key press
+        /* The following I feel needs explanation. First we erase the whole screen. Then we touchwin the output *
+         * and stats windows. The map we don't care about, as this is stored in an array anyway and reprinted   *
+         * as needed. we update the windows to push the inventory screen off of the terminal. Then we box our   *
+         * map, output, and stats border windows, and then touchwin again on output and stats. Again with map   *
+         * in our array, we do not care if this gets clobbered. We then wrefresh the borders, as by default     *
+         * update_windows only refreshes those windows when the game first runs. We then update windows again   *
+         * to ensure that the stats and output windows maintain the information originally being displayed      */
+        werase(stdscr);
+        touchwin(output);
+        touchwin(stats);
+        update_windows();
+        box(output_border, 0, 0);
+        touchwin(output);
+        box(map_border, 0, 0);
+        box(stats_border, 0, 0);
+        touchwin(stats);
+        wrefresh(output_border);
+        wrefresh(map_border);
+        wrefresh(stats_border);
+        update_windows();
+    }
+    if (!has_objects) {
+        wprintw(output, "\nYour inventory is empty!");
+        wrefresh(output);
+    }
+    return;
 }
 
 void take() {
-    int i = 0;
-    bool taken = false;
+    int i = 0, j = 0;
+    bool taken = false, has_space = false;
     for (i = 0; i < ttl_objects; i++) {
-        if ((objects[i].z == hero.z) && (objects[i].x == hero.x) && (objects[i].y == hero.y) && (objects[i].moveable)) {
+        if ((objects[i].z == hero.z) && (objects[i].x == hero.x) && (objects[i].y == hero.y) && (objects[i].moveable)) { //if object location = hero location & if object is moveable
             if (objects[i].glyph == '$') {
                 wprintw(output, "\nYou add %d gold to your wallet.", objects[i].amount);
                 wrefresh(output);
@@ -73,7 +133,7 @@ void take() {
                 destroy_object(i); //gold should always be destroyed on pickup. new gold object can be created later if needed
             }
             if (objects[i].glyph == '}') {
-                wprintw(output, "\nYou somehow pick up the fountain and take it with you.");
+                wprintw(output, "\nYou somehow pick up the %s and take it with you.", objects[i].name);
                 wrefresh(output);
                 taken = true;
                 objects[i].owner = 0;

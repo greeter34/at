@@ -65,8 +65,9 @@ void loop() {
     }
 
     checks(moved);
-    mvwprintw(stats, 1, 1, "Turns: %d\tLvl: %d", turns, hero.z + 1);
-    mvwprintw(stats, 2, 1, "HP: %d / %d\tGold: %d", hero.hp, hero.max_hp, hero.gold);
+    mvwprintw(stats, 0, 1, "Turns: %d\tLvl: %d", turns, hero.z + 1);
+    mvwprintw(stats, 1, 1, "HP: %d / %d\tGold: %d", hero.hp, hero.max_hp, hero.gold);
+    wrefresh(stats);
     //non-movement commands
     if (todo == 'q') { //quit
         quit();
