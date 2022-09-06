@@ -121,4 +121,9 @@ void look();
 bool move_hero(dir a);
 void move_cursor(dir a);
 
+//windows.c
+void init_windows();
+void update_windows();
+void fix_windows();
+
 #endif

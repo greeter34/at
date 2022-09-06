@@ -92,26 +92,6 @@ void print_inventory() {
             }
         }
         getch(); //so user has time to look at inventory. we don't care about this key press
-        /* The following I feel needs explanation. First we erase the whole screen. Then we touchwin the output *
-         * and stats windows. The map we don't care about, as this is stored in an array anyway and reprinted   *
-         * as needed. we update the windows to push the inventory screen off of the terminal. Then we box our   *
-         * map, output, and stats border windows, and then touchwin again on output and stats. Again with map   *
-         * in our array, we do not care if this gets clobbered. We then wrefresh the borders, as by default     *
-         * update_windows only refreshes those windows when the game first runs. We then update windows again   *
-         * to ensure that the stats and output windows maintain the information originally being displayed      */
-        werase(stdscr);
-        touchwin(output);
-        touchwin(stats);
-        update_windows();
-        box(output_border, 0, 0);
-        touchwin(output);
-        box(map_border, 0, 0);
-        box(stats_border, 0, 0);
-        touchwin(stats);
-        wrefresh(output_border);
-        wrefresh(map_border);
-        wrefresh(stats_border);
-        update_windows();
     }
     if (!has_objects) {
         wprintw(output, "\nYour inventory is empty!");

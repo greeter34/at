@@ -5,36 +5,6 @@
 #include <time.h>
 #include "globals.h"
 
-void init_windows() { //create windows for the map, hero stats, and output messages
-    int mapx = 0, mapy = 0, i = 0; //used to store maximum width and height of map
-    init_color(COLOR_BLACK, 0, 0, 0);
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    if (clear() == ERR) panic(10);
-    wattron(map, COLOR_PAIR(1));
-    bkgd(COLOR_PAIR(1));
-    if ((output = initscr()) == NULL) panic(2);
-    if ((map = initscr()) == NULL) panic(2);
-    if ((stats = initscr()) == NULL) panic(2);
-    if ((output_border = initscr()) == NULL) panic(2);
-    if ((map_border = initscr()) == NULL) panic(2);
-    if ((stats_border = initscr()) == NULL) panic(2);
-    if ((LINES - 13) > MAP_MAX_X) {mapx = MAP_MAX_X;}
-    else {mapx = (LINES - 13);}
-    if ((COLS - 1) > MAP_MAX_Y) {mapy = MAP_MAX_Y;}
-    else {mapy = (COLS - 1);}
-    output_border = newwin(6, (COLS - 1), 1, 1);
-    map_border = newwin(mapx, mapy, 7, 1);
-    stats_border = newwin(4, (COLS - 1), (LINES - 6), 1);
-    output = newwin(4, (COLS - 3), 2, 2);
-    map = newwin((mapx - 2), (mapy - 2), 8, 2);
-    stats = newwin(2, (COLS - 3), (LINES - 5), 2);
-    box(output_border, 0, 0);
-    box(map_border, 0, 0);
-    box(stats_border, 0, 0);
-    generate_level(); //this generates only the first level, though the function will be used to generate later levels
-    return;
-}
-
 void init_hero() { //initialize hero
     hero.exp = 1;
     hero.gold = 0;
@@ -84,21 +54,4 @@ void quit() { //attempt to close the program gracefully at the user's request. t
     if (endwin() == ERR) panic(5);
     exit(EXIT_SUCCESS);
     return; //this should never be called
-}
-
-void update_windows() {
-    static bool called = FALSE;
-    if (wnoutrefresh(stdscr) == ERR) panic(3);
-    if (wnoutrefresh(curscr) == ERR) panic(3);
-    if (wnoutrefresh(stats) == ERR) panic(3);
-    if (wnoutrefresh(output) == ERR) panic(3);
-    if (wnoutrefresh(map) == ERR) panic(3);
-    if (!called) {
-        if (wnoutrefresh(output_border) == ERR) panic(4);
-        if (wnoutrefresh(stats_border) == ERR) panic(4);
-        if (wnoutrefresh(map_border) == ERR) panic(4);
-        called = TRUE;
-    }
-    if (doupdate() == ERR) panic(5);
-    return;
 }
