@@ -8,7 +8,36 @@ void draw_map(int level) {
     wmove(map, 0, 0);
     for (i_y = 0; i_y < y; i_y++) {
         for (i_x = 0; i_x < x; i_x++) {
-            wprintw(map, "%c", maps[hero.z][i_x][i_y]);
+            /* Walls will be implemented as follows:                                     *
+             * 1: Vertical line/wall                                                     *
+             * 2: Horizontal line/wall                                                   *
+             * 3: Upper left corner of wall                                              *
+             * 4: Upper right corner of wall                                             *
+             * 5: Lower left corner of wall                                              *
+             * 6: Lower right corner of wall                                             *
+             */
+            if (maps[hero.z][i_x][i_y] == '1') {
+                waddch(map, ACS_VLINE);
+            }
+            else if (maps[hero.z][i_x][i_y] == '2') {
+                waddch(map, ACS_HLINE);
+            }
+            else if (maps[hero.z][i_x][i_y] == '3') {
+                waddch(map, ACS_ULCORNER);
+            }
+            else if (maps[hero.z][i_x][i_y] == '4') {
+                waddch(map, ACS_URCORNER);
+            }
+            else if (maps[hero.z][i_x][i_y] == '5') {
+                waddch(map, ACS_LLCORNER);
+            }
+            else if (maps[hero.z][i_x][i_y] == '6') {
+                waddch(map, ACS_LRCORNER);
+            }
+            else {
+                wprintw(map, "%c", maps[hero.z][i_x][i_y]);
+            }
+            //waddch(map, ACS_VLINE);
         }
     }
     wattron(map, A_REVERSE);

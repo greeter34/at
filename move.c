@@ -40,6 +40,12 @@ bool move_hero(dir a) {
         wprintw(output, "\nOuch. You bump into solid rock.");
         return false;
     }
+    if ((maps[hero.z][hero.x][hero.y] == '1') || (maps[hero.z][hero.x][hero.y] == '2') || (maps[hero.z][hero.x][hero.y] == '3') || (maps[hero.z][hero.x][hero.y] == '4') || (maps[hero.z][hero.x][hero.y] == '5') || (maps[hero.z][hero.x][hero.y] == '6')) {
+        hero.y = y;
+        hero.x = --x;
+        wprintw(output, "\nOuch. You bump into a wall.");
+        return false;
+    }
     return true;
 }
 
