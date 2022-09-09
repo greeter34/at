@@ -22,7 +22,7 @@ void init_game() { //initialize game variables
     turns = 0;
     ttl_objects = 0;
     ttl_monsters = 0;
-    valid = false;
+    valid = FALSE;
     seed = time(NULL);
     srand(seed);
     initscr();
@@ -41,7 +41,7 @@ void init_game() { //initialize game variables
     init_windows();
     init_hero();
     for (i = 0; i < 50; i++) {
-        been_here[i] = false;
+        been_here[i] = FALSE;
     }
     update_windows();
     return;
