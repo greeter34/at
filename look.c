@@ -1,6 +1,6 @@
 #include <curses.h>
 #include "globals.h"
-
+/*
 void what_is_there(char a) { //this function is bugged. first wprintw call fails if hero has not moved this game session
     wprintw(output, "\n'%c' - ", a);
     switch(a) {
@@ -111,3 +111,4 @@ void look() {
     hero.y = y;
     return;
 }
+*/

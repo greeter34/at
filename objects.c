@@ -17,16 +17,15 @@ void create_object(int z, int x, int y, char glyph) {
     objects[ttl_objects].x = x;
     objects[ttl_objects].y = y;
     objects[ttl_objects].glyph = glyph;
-    objects[ttl_objects].exists = TRUE;
+    objects[ttl_objects].exists = 1; //most objects exist
     objects[ttl_objects].id = ttl_objects; //this may be removed later
     objects[ttl_objects].owner = -1; //-1 is no owner as the ID attribute is unsigned so always positive or 0. this should be for objects on the ground only
     //the following we set to the most common values. they can then be adjusted later if needed
-    objects[ttl_objects].visible = TRUE; //most objects will be visible
-    objects[ttl_objects].infravisible = FALSE; //most objects will not have a heat signature
-    objects[ttl_objects].moveable = TRUE; //we can pick up most objects
-    objects[ttl_objects].edible = FALSE; //only food is edible
+    objects[ttl_objects].visible = 1; //most objects will be visible but not have a heat signature
+    objects[ttl_objects].moveable = 1; //we can pick up most objects
+    objects[ttl_objects].edible = 0; //only food is edible
     objects[ttl_objects].amount = 1; //only one copy of most objects per space
-    objects[ttl_objects].buc = 'u'; //most objects are uncursed
+    objects[ttl_objects].buc = 1; //most objects are uncursed
     //now things might change depending on what the object is
     if (glyph == '$') {
         strcpy(objects[ttl_objects].name, "gold");
@@ -41,8 +40,8 @@ void create_object(int z, int x, int y, char glyph) {
 }
 
 void destroy_object(int a) {
-    objects[a].z = 101; //this puts it out of bounds
-    objects[a].exists = FALSE; //this prevents interaction by functions which check this
+    objects[a].z = 101; //this puts it out of bounds on level 101
+    objects[a].exists = 0; //this prevents interaction by functions which check this
     objects[a].glyph = '9'; //this assigns an invalid glyph to the object
     return;
 }
@@ -101,14 +100,13 @@ void print_inventory() {
 }
 
 void take() {
-    int i = 0, j = 0;
-    bool taken = false, has_space = false;
+    int i = 0;
+    bool taken = false;
     for (i = 0; i < ttl_objects; i++) {
         if ((objects[i].z == hero.z) && (objects[i].x == hero.x) && (objects[i].y == hero.y) && (objects[i].moveable)) { //if object location = hero location & if object is moveable
             if (objects[i].glyph == '$') {
                 wprintw(output, "\nYou add %d gold to your wallet.", objects[i].amount);
                 wrefresh(output);
-                hero.gold += objects[i].amount;
                 taken = true;
                 destroy_object(i); //gold should always be destroyed on pickup. new gold object can be created later if needed
             }

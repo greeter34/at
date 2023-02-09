@@ -1,43 +1,16 @@
 #include <curses.h>
+#include <stdlib.h>
+#include <stdlib.h>
 #include "globals.h"
 
 void draw_map(int level) {
     wattroff(map, A_REVERSE);
-    int i_x = 0, i_y = 0, x = 0, y = 0;
+    int iterator_x = 0, iterator_y = 0, x = 0, y = 0;
     getmaxyx(map, y, x);
     wmove(map, 0, 0);
-    for (i_y = 0; i_y < y; i_y++) {
-        for (i_x = 0; i_x < x; i_x++) {
-            /* Walls will be implemented as follows:                                     *
-             * 1: Vertical line/wall                                                     *
-             * 2: Horizontal line/wall                                                   *
-             * 3: Upper left corner of wall                                              *
-             * 4: Upper right corner of wall                                             *
-             * 5: Lower left corner of wall                                              *
-             * 6: Lower right corner of wall                                             *
-             */
-            if (maps[hero.z][i_x][i_y] == '1') {
-                waddch(map, ACS_VLINE);
-            }
-            else if (maps[hero.z][i_x][i_y] == '2') {
-                waddch(map, ACS_HLINE);
-            }
-            else if (maps[hero.z][i_x][i_y] == '3') {
-                waddch(map, ACS_ULCORNER);
-            }
-            else if (maps[hero.z][i_x][i_y] == '4') {
-                waddch(map, ACS_URCORNER);
-            }
-            else if (maps[hero.z][i_x][i_y] == '5') {
-                waddch(map, ACS_LLCORNER);
-            }
-            else if (maps[hero.z][i_x][i_y] == '6') {
-                waddch(map, ACS_LRCORNER);
-            }
-            else {
-                wprintw(map, "%c", maps[hero.z][i_x][i_y]);
-            }
-            //waddch(map, ACS_VLINE);
+    for (iterator_y = 0; iterator_y < y; iterator_y++) {
+        for (iterator_x = 0; iterator_x < x; iterator_x++) {
+           mvwprintw(map, iterator_y, iterator_x, "%d", levels[level][iterator_x][iterator_y].type);
         }
     }
     wattron(map, A_REVERSE);
@@ -52,13 +25,7 @@ void draw_objects(int level) {
     for (i = 0; i < ttl_objects; i++) {
         if (objects[i].z == level) {
             wmove(map, objects[i].y, objects[i].x);
-            if (objects[i].glyph == '$') {
-                wattron(map, COLOR_PAIR(2));
-                wprintw(map, "%c", objects[i].glyph);
-                wattroff(map, COLOR_PAIR(2));
-                wrefresh(map);
-            }
-            else if (objects[i].glyph == '}') {
+            if (objects[i].glyph == '}') {
                 wattron(map, COLOR_PAIR(3));
                 wprintw(map, "%c", objects[i].glyph);
                 wattroff(map, COLOR_PAIR(3));
@@ -84,99 +51,17 @@ void redraw_screen() { //this function should be called, rather than one of the 
     return;
 }
 
-void generate_room (int segment) {
-    struct Coord {
-        unsigned int x;
-        unsigned int y;
-    };
-    int i = 0, x = 0, y = 0, i_x = 0, i_y = 0, wall_length = 0, wall_height = 0;
-    struct Coord upper_lc, upper_rc, lower_lc, lower_rc;
-    getmaxyx(map, y, x);
-    //establish room corners
-    switch(segment) {
-        case 1:
-            upper_lc.x = roll(1, (x / 3));
-            upper_lc.y = roll(1, (y / 3));
-            break;
-        case 2:
-            upper_lc.x = (roll(1, (x / 3)) + (x / 3));
-            upper_lc.y = roll(1, (y / 3));
-            break;
-        case 3:
-            upper_lc.x = (roll, 1, (x / 3)) + (x / 3);
-            upper_lc.y = roll(1, y / 3);
-            break;
-        case 4:
-            upper_lc.x = roll(1, (x / 3));
-            upper_lc.y = (roll(1, (y / 2)) + (y / 3));
-            break;
-        case 5:
-            upper_lc.x = (roll(1, (x / 3)) + (x / 3));
-            upper_lc.y = (roll(1, (y / 2)) + (y / 3));
-            break;
-        case 6:
-            upper_lc.x = ((roll, 1, (x / 3)) + ((x / 3)));
-            upper_lc.y = (roll(1, (y / 2)) + (y / 3));
-            break;
-        default:
-            panic(11);
-            break;
-    }
-    upper_rc.x = (upper_lc.x + (roll(1, 10) + 3));
-    upper_rc.y = upper_lc.y;
-    lower_lc.x = upper_lc.x;
-    lower_lc.y = (upper_lc.y + (roll(1, 7) + 3)); //terminals are usually wider than taller, rooms should be similar on average
-    if (lower_lc.y >= y) {
-        lower_lc.y = (y - 1);
-    }
-    lower_rc.x = upper_rc.x;
-    lower_rc.y = lower_lc.y;
-    //assign room corner values into array
-    maps[hero.z][upper_lc.x][upper_lc.y] = '3';
-    maps[hero.z][upper_rc.x][upper_rc.y] = '4';
-    maps[hero.z][lower_lc.x][lower_lc.y] = '5';
-    maps[hero.z][lower_rc.x][lower_rc.y] = '6';
-    //fill in horizontal walls
-    for (i = (upper_lc.x + 1); i < upper_rc.x; i++) {
-        maps[hero.z][i][upper_lc.y] = '2';
-        maps[hero.z][i][lower_lc.y] = '2';
-    }
-    //fill in vertical walls
-    for (i = (upper_lc.y + 1); i < lower_lc.y; i++) {
-        maps[hero.z][upper_lc.x][i] = '1';
-        maps[hero.z][upper_rc.x][i] = '1';
-    }
-    for (i_y = upper_lc.y; i_y < lower_rc.y; i_y++) {
-        for (i_x = upper_lc.x; i_x < upper_rc.x; i_x++) {
-            if (maps[hero.z][i_x][i_y] != ' ') {
-                continue;
-            }
-            else {
-                maps[hero.z][i_x][i_y] = '.';
-            }
-        }
-    }
-    been_here[hero.z] = TRUE;
-    return;
-}
-void generate_level () {
-    struct Coord {
-        unsigned int x;
-        unsigned int y;
-    };
+void generate_level(int level) {
     if (been_here[hero.z]) {
         panic(9); //panic. we have been here before, so this function should not have been called and continuing may disrupt the game
     }
-    int i = 0, x = 0, y = 0, i_x = 0, i_y = 0, wall_length = 0, wall_height = 0;
-    struct Coord upper_lc, upper_rc, lower_lc, lower_rc;
+    int x = 0, y = 0, iterator_x = 0, iterator_y = 0, random = 9;
     getmaxyx(map, y, x);
-    for (i_y = 0; i_y < y; i_y++) {
-        for (i_x = 0; i_x < x; i_x++) {
-            maps[hero.z][i_x][i_y] = ' '; //blank the map to start
+    for (iterator_y = 0; iterator_y < y; iterator_y++) {
+        for (iterator_x = 0; iterator_x < x; iterator_x++) {
+            random = (rand() % 9) + 1;
+            levels[level][iterator_x][iterator_y].type = random; //this is not a good map gen
         }
-    }
-    for (i = 1; i < 7; i++) {
-        generate_room(i);
     }
     //been_here[hero.z] = TRUE;
     return;
