@@ -4,13 +4,32 @@
 #include "globals.h"
 
 void draw_map(int level) {
+    char to_print = ' ';
+    int attributes = 5, iterator = 1, iterator_x = 0, iterator_y = 0, x = 0, y = 0;
     wattroff(map, A_REVERSE);
-    int iterator_x = 0, iterator_y = 0, x = 0, y = 0;
     getmaxyx(map, y, x);
     wmove(map, 0, 0);
     for (iterator_y = 0; iterator_y < y; iterator_y++) {
         for (iterator_x = 0; iterator_x < x; iterator_x++) {
-           mvwprintw(map, iterator_y, iterator_x, "%d", levels[level][iterator_x][iterator_y].type);
+            to_print = tile_types[levels[level][iterator_x][iterator_y].type];
+            switch(levels[level][iterator_x][iterator_y].type) {
+                case 2:
+                    wattron(map, COLOR_PAIR(2));
+                    break;
+                case 3:
+                    wattron(map, COLOR_PAIR(3));
+                    break;
+                case 4:
+                    wattron(map, COLOR_PAIR(4));
+                    break;
+                case 5:
+                    wattron(map, COLOR_PAIR(5));
+                    break;
+            }
+            mvwprintw(map, iterator_y, iterator_x, "%c", to_print);
+            wattron(map, COLOR_PAIR(1));
+            wattroff(map, A_REVERSE);
+            wattroff(map, A_BOLD);
         }
     }
     wattron(map, A_REVERSE);
@@ -18,17 +37,14 @@ void draw_map(int level) {
 }
 
 void draw_objects(int level) {
-    init_color(COLOR_YELLOW, 1000, 1000, 0);
-    init_pair(2, COLOR_BLACK, COLOR_YELLOW);
-    init_pair(3, COLOR_BLACK, COLOR_BLUE);
     int i = 0;
     for (i = 0; i < ttl_objects; i++) {
         if (objects[i].z == level) {
             wmove(map, objects[i].y, objects[i].x);
             if (objects[i].glyph == '}') {
-                wattron(map, COLOR_PAIR(3));
+                wattron(map, COLOR_PAIR(5));
                 wprintw(map, "%c", objects[i].glyph);
-                wattroff(map, COLOR_PAIR(3));
+                wattroff(map, COLOR_PAIR(5));
                 wrefresh(map);
             }
         }
@@ -59,7 +75,7 @@ void generate_level(int level) {
     getmaxyx(map, y, x);
     for (iterator_y = 0; iterator_y < y; iterator_y++) {
         for (iterator_x = 0; iterator_x < x; iterator_x++) {
-            random = (rand() % 9) + 1;
+            random = (rand() % 10);
             levels[level][iterator_x][iterator_y].type = random; //this is not a good map gen
         }
     }

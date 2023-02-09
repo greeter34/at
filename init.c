@@ -16,19 +16,28 @@ void init_hero() { //initialize hero
     return;
 }
 
+void initialize_color() { //initialize color pairings and definitions
+    init_pair(1, COLOR_WHITE, COLOR_BLACK); //default color state for the game
+    init_pair(2, COLOR_YELLOW, COLOR_BLACK); //dirt floor, doors. should be brown ish
+    init_pair(3, COLOR_CYAN, COLOR_BLACK); //ice
+    init_pair(4, COLOR_GREEN, COLOR_BLACK); //grass floor, trees
+    init_pair(5, COLOR_BLUE, COLOR_BLACK); //water, fountains
+    return;
+}
+
 void init_tiles() { //initialize types of tiles for the map generator to use
     //these are assigned manually so we can label what the represent in the map generator
     //if applicable the glyph for the tile is added afterwards
-    tile_types[0] = 0; //solid rock
-    tile_types[1] = 1; //passage way #
-    tile_types[2] = 2; //dirt floor
-    tile_types[3] = 3; //ice floor
-    tile_types[4] = 4; //grass floor
-    tile_types[5] = 5; //pool of water
-    tile_types[6] = 6; //horizontal wall
-    tile_types[7] = 7; //vertical wall
-    tile_types[8] = 8; //up stairs
-    tile_types[9] = 9; //down stairs
+    tile_types[0] = ' '; //solid rock
+    tile_types[1] = '#'; //passage way #
+    tile_types[2] = '.'; //dirt floor
+    tile_types[3] = '.'; //ice floor
+    tile_types[4] = '.'; //grass floor
+    tile_types[5] = '{'; //pool of water
+    tile_types[6] = '|'; //horizontal wall
+    tile_types[7] = '-'; //vertical wall
+    tile_types[8] = '<'; //up stairs
+    tile_types[9] = '>'; //down stairs
     return;
 }
 
@@ -55,6 +64,8 @@ void init_game() { //initialize game variables
     srand(time(NULL));
     init_windows();
     init_hero();
+    initialize_color();
+    init_tiles();
     for (i = 0; i < 50; i++) {
         been_here[i] = FALSE;
     }

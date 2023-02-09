@@ -13,14 +13,14 @@ extern WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
 extern bool valid; //is an action that advances the number of turns valid?
 //extern char maps[FLOORS][MAP_MAX_X][MAP_MAX_Y];
 extern bool been_here[50];
-extern int tile_types[10];
+extern char tile_types[10];
 
 long unsigned int turns, seed, ttl_objects, ttl_monsters;
 WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
 bool valid;
 //char maps[FLOORS][MAP_MAX_X][MAP_MAX_Y];
 bool been_here[50];
-int tile_types[10];
+char tile_types[10];
 
 //global structure definitions
 
@@ -105,6 +105,7 @@ int roll(int dice, int max);
 
 //init.c
 void init_game();
+void initialize_color();
 void init_hero();
 void init_windows();
 void quit();
