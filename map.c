@@ -25,8 +25,26 @@ void draw_map(int level) {
                 case 5:
                     wattron(map, COLOR_PAIR(5));
                     break;
+                case 6:
+                    mvwaddch(map, iterator_y, iterator_x, ACS_VLINE);
+                    continue;
+                case 7:
+                    mvwaddch(map, iterator_y, iterator_x, ACS_HLINE);
+                    continue;
+                case 10:
+                    mvwaddch(map, iterator_y, iterator_x, ACS_ULCORNER);
+                    continue;
+                case 11:
+                    mvwaddch(map, iterator_y, iterator_x, ACS_URCORNER);
+                    continue;
+                case 12:
+                    mvwaddch(map, iterator_y, iterator_x, ACS_LLCORNER);
+                    continue;
+                case 13:
+                    mvwaddch(map, iterator_y, iterator_x, ACS_LRCORNER);
+                    continue;
             }
-            mvwprintw(map, iterator_y, iterator_x, "%c", to_print);
+            mvwaddch(map, iterator_y, iterator_x, to_print);
             wattron(map, COLOR_PAIR(1));
             wattroff(map, A_REVERSE);
             wattroff(map, A_BOLD);
@@ -71,14 +89,49 @@ void generate_level(int level) {
     if (been_here[hero.z]) {
         panic(9); //panic. we have been here before, so this function should not have been called and continuing may disrupt the game
     }
-    int x = 0, y = 0, iterator_x = 0, iterator_y = 0, random = 9;
+    struct Coord {
+        int y;
+        int x;
+    } ul, ur, ll, lr; //four sets of coords representing the corners of a room
+    int iterator = 0, x = 0, y = 0, iterator_x = 0, iterator_y = 0, random = 9, rooms_this_level = 1, rooms_made = 0;
+    rooms_this_level = (rand() % 4) + 4;
     getmaxyx(map, y, x);
-    for (iterator_y = 0; iterator_y < y; iterator_y++) {
-        for (iterator_x = 0; iterator_x < x; iterator_x++) {
-            random = (rand() % 10);
-            levels[level][iterator_x][iterator_y].type = random; //this is not a good map gen
+    do {
+        ul.x = (rand() % (x - 10)) + 1; //start at least 10 spaces from the bottom of the map
+        ul.y = (rand() % (y - 10)) + 1; //start at least 10 spaces from the far right of the map
+        ur.x = (ul.x + (roll(1, 5) + 5));
+        ur.y = ul.y;
+        ll.x = ul.x;
+        ll.y = (ul.y + (roll(1, 5) + 5));
+        lr.x = ur.x;
+        lr.y = ll.y;
+        for (iterator = ul.x; iterator < ur.x; iterator++) { //top horizontal wall
+            levels[level][iterator][ul.y].walkable = 1;
+            levels[level][iterator][ul.y].lit = 1;
+            levels[level][iterator][ul.y].type = 7;
         }
-    }
+        for (iterator = ll.x; iterator < lr.x; iterator++) { //top vertical wall
+            levels[level][iterator][ll.y].walkable = 1;
+            levels[level][iterator][ll.y].lit = 1;
+            levels[level][iterator][ll.y].type = 7;
+        }
+        for (iterator = ul.y; iterator < ll.y; iterator++) { //left vertical wall
+            levels[level][ul.x][iterator].walkable = 1;
+            levels[level][ul.x][iterator].lit = 1;
+            levels[level][ul.x][iterator].type = 6;
+        }
+        for (iterator = ur.y; iterator < lr.y; iterator++) { //right vertical wall
+            levels[level][ur.x][iterator].walkable = 1;
+            levels[level][ur.x][iterator].lit = 1;
+            levels[level][ur.x][iterator].type = 6;
+        }
+        //this sets the tile type as the various corners so they'll display properly on the map
+        levels[level][ul.x][ul.y].type = 10;
+        levels[level][ur.x][ur.y].type = 11;
+        levels[level][ll.x][ll.y].type = 12;
+        levels[level][lr.x][lr.y].type = 13;
+        rooms_made++;
+    } while (rooms_made < rooms_this_level);
     //been_here[hero.z] = TRUE;
     return;
 }

@@ -34,10 +34,14 @@ void init_tiles() { //initialize types of tiles for the map generator to use
     tile_types[3] = '.'; //ice floor
     tile_types[4] = '.'; //grass floor
     tile_types[5] = '{'; //pool of water
-    tile_types[6] = '|'; //horizontal wall
-    tile_types[7] = '-'; //vertical wall
+    tile_types[6] = ACS_VLINE; //vertical wall
+    tile_types[7] = ACS_HLINE; //horizontal wall
     tile_types[8] = '<'; //up stairs
     tile_types[9] = '>'; //down stairs
+    tile_types[10] = ACS_ULCORNER; //upper left corner
+    tile_types[11] = ACS_URCORNER; //upper right corner
+    tile_types[12] = ACS_LLCORNER; //lower left corner
+    tile_types[13] = ACS_LRCORNER; //lower right corner
     return;
 }
 

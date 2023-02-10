@@ -7,6 +7,8 @@
 #define MAP_MAX_X 25
 #define MAP_MAX_Y 80
 
+//global constants
+
 //global variables
 extern long unsigned int turns, seed, ttl_objects, ttl_monsters;
 extern WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
@@ -65,7 +67,6 @@ typedef struct Tile {
     short unsigned int z : 8;
     unsigned int walkable : 1;
     unsigned int lit : 1;
-    char glyph;
     int type;
     monster *m_here; //pointer to a monster that is here
 } tile;
