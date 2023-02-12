@@ -53,10 +53,10 @@ void loop() {
     //non-movement commands
     /*if (todo == ';') { //far look
         look();
-    }
+    }*/
     if (todo == ':') { //near look
         what_is_here();
-    }*/
+    }
     if (todo == ',') { //take
         take();
     }

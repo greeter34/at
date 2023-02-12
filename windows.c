@@ -3,6 +3,7 @@
 
 void init_windows() { //create windows for the map, hero stats, and output messages
     int mapx = 0, mapy = 0; //used to store maximum width and height of map
+    bool generated = false; //checks level generation
     init_color(COLOR_BLACK, 0, 0, 0);
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
     if (clear() == ERR) panic(10);
@@ -27,7 +28,9 @@ void init_windows() { //create windows for the map, hero stats, and output messa
     box(output_border, 0, 0);
     box(map_border, 0, 0);
     box(stats_border, 0, 0);
-    generate_level(0); //this generates only the first level, though the function will be used to generate later levels
+    while (!generated) {
+        generated = generate_level(0); //this generates only the first level, though the function will be used to generate later levels
+    }
     return;
 }
 

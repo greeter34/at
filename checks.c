@@ -23,6 +23,9 @@ void impossible(int error) { //function for handling impossible events, but perm
     else if (error == 2) {
         wprintw(output, "\nUndefined object here. This is a bug.");
     }
+    else if (error == 3) {
+        wprintw(output, "\nHero in solid rock?");
+    }
     wprintw(output, " Maybe you should save or quit?");
     return;
 }

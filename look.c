@@ -35,6 +35,31 @@ void what_is_there(char a) { //this function is bugged. first wprintw call fails
     return;
 }
 
+*/
+
+void what_is_here() {
+    switch(levels[hero.z][hero.x][hero.y].type) {
+        case 0:
+            wprintw(output, "\nSolid rock");
+            impossible(3);
+            break;
+        case 1:
+            wprintw(output, "\nA passage way");
+            break;
+        case 2:
+            wprintw(output, "\nDirt floor");
+            break;
+        case 3:
+            wprintw(output, "\nIce floor");
+            break;
+        case 4:
+            wprintw(output, "\nGrass floor");
+            break;
+    }
+    return;
+}
+
+/*
 void what_is_here() {
     int i = 0;
     bool objects_here = FALSE;

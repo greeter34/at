@@ -85,7 +85,7 @@ void redraw_screen() { //this function should be called, rather than one of the 
     return;
 }
 
-void generate_level(int level) {
+bool generate_level(int level) {
     if (been_here[hero.z]) {
         panic(9); //panic. we have been here before, so this function should not have been called and continuing may disrupt the game
     }
@@ -93,35 +93,52 @@ void generate_level(int level) {
         int y;
         int x;
     } ul, ur, ll, lr; //four sets of coords representing the corners of a room
-    int iterator = 0, x = 0, y = 0, iterator_x = 0, iterator_y = 0, random = 9, rooms_this_level = 1, rooms_made = 0;
-    rooms_this_level = (rand() % 4) + 4;
+    int iterator = 0, x = 0, y = 0, iterator_x = 0, iterator_y = 0, random = 9, rooms_this_level = 1, rooms_made = 0, counter = 0;
+    bool success = false;
+    rooms_this_level = (rand() % 6) + 4;
     getmaxyx(map, y, x);
     do {
-        ul.x = (rand() % (x - 10)) + 1; //start at least 10 spaces from the bottom of the map
-        ul.y = (rand() % (y - 10)) + 1; //start at least 10 spaces from the far right of the map
-        ur.x = (ul.x + (roll(1, 5) + 5));
+        bool room_here = false;
+        if (counter > 10000) break; //if we've tried ten thousand times with these parameters to generate a map unsuccessfully, we better bail
+        ul.x = (roll(1, x) - 5); //start at least 5 spaces from the far right of the draw_map
+        ul.y = (roll(1, y) - 5); //start at least 5 spaces from the bottom of the map
+        ur.x = (ul.x + (roll(1, 10) + 3)); //rooms are between 3 and 13 nodes wide
         ur.y = ul.y;
         ll.x = ul.x;
-        ll.y = (ul.y + (roll(1, 5) + 5));
+        ll.y = (ul.y + (roll(1, 10) + 3)); //rooms are between 3 and 13 nodes high
         lr.x = ur.x;
         lr.y = ll.y;
+        if ((lr.x > (x - 1)) || (lr.y > (y - 1)) || (ul.x < 1) || (ul.y < 1)) {
+            counter++;
+            continue; //try again if rooms exceed map boundaries
+        }
+        //scan the area to ensure a room is not already here
+        for (iterator_y = (ul.y - 1); iterator_y < (lr.y + 1); iterator_y++) {
+            for (iterator_x = (ul.x - 1); iterator_x < (lr.x + 1); iterator_x++) {
+                if (levels[level][iterator_x][iterator_y].type != 0) room_here = true;
+            }
+        }
+        if (room_here) {
+            counter++;
+            continue; //try again if room would be stacked over existing room
+        }
         for (iterator = ul.x; iterator < ur.x; iterator++) { //top horizontal wall
-            levels[level][iterator][ul.y].walkable = 1;
+            levels[level][iterator][ul.y].walkable = 0;
             levels[level][iterator][ul.y].lit = 1;
             levels[level][iterator][ul.y].type = 7;
         }
         for (iterator = ll.x; iterator < lr.x; iterator++) { //top vertical wall
-            levels[level][iterator][ll.y].walkable = 1;
+            levels[level][iterator][ll.y].walkable = 0;
             levels[level][iterator][ll.y].lit = 1;
             levels[level][iterator][ll.y].type = 7;
         }
         for (iterator = ul.y; iterator < ll.y; iterator++) { //left vertical wall
-            levels[level][ul.x][iterator].walkable = 1;
+            levels[level][ul.x][iterator].walkable = 0;
             levels[level][ul.x][iterator].lit = 1;
             levels[level][ul.x][iterator].type = 6;
         }
         for (iterator = ur.y; iterator < lr.y; iterator++) { //right vertical wall
-            levels[level][ur.x][iterator].walkable = 1;
+            levels[level][ur.x][iterator].walkable = 0;
             levels[level][ur.x][iterator].lit = 1;
             levels[level][ur.x][iterator].type = 6;
         }
@@ -130,8 +147,20 @@ void generate_level(int level) {
         levels[level][ur.x][ur.y].type = 11;
         levels[level][ll.x][ll.y].type = 12;
         levels[level][lr.x][lr.y].type = 13;
+        //fill the rooms with flooring
+        ul.x++;
+        ul.y++;
+        int random_floor = roll(1, 3) + 1;
+        for (iterator_y = ul.y; iterator_y < lr.y; iterator_y++) {
+            for (iterator_x = ul.x; iterator_x < lr.x; iterator_x++) {
+                levels[level][iterator_x][iterator_y].walkable = 1;
+                levels[level][iterator_x][iterator_y].lit = 1;
+                levels[level][iterator_x][iterator_y].type = random_floor;
+            }
+        }
         rooms_made++;
+        if (rooms_made == rooms_this_level) success = true;
     } while (rooms_made < rooms_this_level);
     //been_here[hero.z] = TRUE;
-    return;
+    return success;
 }

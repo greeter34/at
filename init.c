@@ -6,10 +6,14 @@
 #include "globals.h"
 
 void init_hero() { //initialize hero
+    int x = 0, y = 0;
+    getmaxyx(map, y, x);
     hero.exp = 1;
-    hero.x = roll(2, 10);
-    hero.y = roll(2, 10);
-    hero.z = 0;
+    do {
+        hero.x = roll(1, x);
+        hero.y = roll(1, y);
+        hero.z = 0;
+    } while (levels[hero.z][hero.x][hero.y].walkable != 1);
     hero.hp = 15;
     hero.max_hp = 12; //deliberately lower than hp for bug testing
     wmove(map, hero.y, hero.x);

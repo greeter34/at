@@ -122,7 +122,7 @@ void draw_map(int level);
 void draw_objects(int level);
 void draw_monsters(int level);
 void redraw_screen();
-void generate_level();
+bool generate_level();
 void generate_room(int segment);
 
 //objects.c
