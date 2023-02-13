@@ -4,7 +4,6 @@ bool move_hero(dir a) {
     int x = 0, y = 0;
     bool moved = true;
     getyx(map, y, x); //store current coordinates of the hero in case the hero cannot move to the desired square
-    char onscreen = '0';
     if (a == UP) {
         hero.y--;
     }

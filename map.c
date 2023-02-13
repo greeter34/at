@@ -5,7 +5,7 @@
 
 void draw_map(int level) {
     char to_print = ' ';
-    int attributes = 5, iterator = 1, iterator_x = 0, iterator_y = 0, x = 0, y = 0;
+    int iterator_x = 0, iterator_y = 0, x = 0, y = 0;
     wattroff(map, A_REVERSE);
     getmaxyx(map, y, x);
     wmove(map, 0, 0);
@@ -93,7 +93,7 @@ bool generate_level(int level) {
         int y;
         int x;
     } ul, ur, ll, lr; //four sets of coords representing the corners of a room
-    int iterator = 0, x = 0, y = 0, iterator_x = 0, iterator_y = 0, random = 9, rooms_this_level = 1, rooms_made = 0, counter = 0;
+    int iterator = 0, x = 0, y = 0, iterator_x = 0, iterator_y = 0, rooms_this_level = 1, rooms_made = 0, counter = 0;
     bool success = false;
     rooms_this_level = (rand() % 6) + 4;
     getmaxyx(map, y, x);
