@@ -2,12 +2,47 @@
 #include <stdlib.h>
 #include "globals.h"
 
+void fix_time() {
+    unsigned int iterator = 0;
+    while (g_time.second > 59) {
+        g_time.second -= 60;
+        iterator++;
+    }
+    g_time.minute += iterator;
+    iterator = 0;
+    while (g_time.minute > 59) {
+        g_time.minute -= 60;
+        iterator++;
+    }
+    g_time.hour += iterator;
+    iterator = 0;
+    while (g_time.hour > 23) {
+        g_time.hour -= 24;
+        iterator++;
+    }
+    g_time.day += iterator;
+    iterator = 0;
+    while (g_time.day > 30) {
+        g_time.day -= 30;
+        iterator++;
+    }
+    g_time.month += iterator;
+    iterator = 0;
+    while (g_time.month > 3) {
+        g_time.month -= 4;
+        iterator++;
+    }
+    g_time.year += iterator;
+}
+
 void checks(bool moved) {
-    if (hero.hp > hero.max_hp) hero.hp = hero.max_hp;
+    if (hero.stamina > hero.max_stamina) hero.stamina = hero.max_stamina;
     idlok(output, TRUE);
     scrollok(output, TRUE);
     if (valid && moved) {
         turns++;
+        g_time.second+= 1; //it takes 1 second to move somewhere else nearby
+        fix_time();
         valid = false;
     }
     return;
@@ -25,6 +60,9 @@ void impossible(int error) { //function for handling impossible events, but perm
     }
     else if (error == 3) {
         wprintw(output, "\nHero in solid rock?");
+    }
+    else if (error == 4) {
+        wprintw(output, "\nMonth is invalid. Showing it as %d", g_time.month);
     }
     wprintw(output, " Maybe you should save or quit?");
     return;

@@ -21,11 +21,8 @@ void create_object(int z, int x, int y, char glyph) {
     objects[ttl_objects].id = ttl_objects; //this may be removed later
     objects[ttl_objects].owner = -1; //-1 is no owner as the ID attribute is unsigned so always positive or 0. this should be for objects on the ground only
     //the following we set to the most common values. they can then be adjusted later if needed
-    objects[ttl_objects].visible = 1; //most objects will be visible but not have a heat signature
-    objects[ttl_objects].moveable = 1; //we can pick up most objects
     objects[ttl_objects].edible = 0; //only food is edible
     objects[ttl_objects].amount = 1; //only one copy of most objects per space
-    objects[ttl_objects].buc = 1; //most objects are uncursed
     //now things might change depending on what the object is
     if (glyph == '$') {
         strcpy(objects[ttl_objects].name, "gold");
@@ -33,7 +30,6 @@ void create_object(int z, int x, int y, char glyph) {
     }
     if (glyph == '}') {
         strcpy(objects[ttl_objects].name, "fountain");
-        //objects[ttl_objects].moveable = FALSE; //commented out for debugging purposes
     }
     ttl_objects++;
     return;
@@ -103,7 +99,7 @@ void take() {
     int i = 0;
     bool taken = false;
     for (i = 0; i < ttl_objects; i++) {
-        if ((objects[i].z == hero.z) && (objects[i].x == hero.x) && (objects[i].y == hero.y) && (objects[i].moveable)) { //if object location = hero location & if object is moveable
+        if ((objects[i].z == hero.z) && (objects[i].x == hero.x)) { //if object location = hero location
             if (objects[i].glyph == '$') {
                 wprintw(output, "\nYou add %d gold to your wallet.", objects[i].amount);
                 wrefresh(output);

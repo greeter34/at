@@ -3,7 +3,8 @@
 #ifndef _GLOBALS
 #define _GLOBALS
 
-#define FLOORS 100
+//rooms is all areas the player can visit. includes character's homes, major buildlings like the player's barn, each level of the mine, etc
+#define ROOMS 38
 #define MAP_MAX_X 25
 #define MAP_MAX_Y 80
 
@@ -32,16 +33,9 @@ typedef struct Monster {
     short unsigned int z : 8;
     long unsigned int id;
     unsigned int exp;
-    signed int hp;
-    unsigned int max_hp;
+    signed int stamina;
+    unsigned int max_stamina;
     char name[10];
-    char called[50];
-    int conf : 1;
-    int stun : 1;
-    int paralyzed : 1;
-    int blind : 1;
-    int deaf : 1;
-    int hallucinating : 1;
 } monster;
 
 typedef struct Object {
@@ -54,10 +48,7 @@ typedef struct Object {
     long unsigned int id;
     long signed int owner; //matches ID of monster that owns the item, if any. the hero is always 0
     char glyph;
-    int buc : 2; //0 is cursed, 1 is uncursed, 2 is blessed. 3 is an impossible();
     int exists : 1;
-    int moveable : 1;
-    int visible : 2; //objects can be visible, invisible, or infravisible. infravisible implies visible. 0 is invisible. 1 is visible. 2 is infravisible. 3 is an impossible();
     int edible : 1;
 } object;
 
@@ -76,10 +67,25 @@ typedef struct Inventory {
     char name[50]; //name as it should appear in inventory. longer than item name as this can be shown as "uncursed thing" or similar
 } inventory; //array of 52 items for maximum number of inventory slots
 
+typedef struct Coord {
+    int y;
+    int x;
+} coord;
+
+typedef struct Time {
+    short unsigned int second;
+    short unsigned int minute;
+    short unsigned int hour;
+    short unsigned int day;
+    short unsigned int month;
+    short unsigned int year;
+} GameTime;
+
 //global structures
 extern object *objects;
-extern tile levels[FLOORS][MAP_MAX_X][MAP_MAX_Y];
+extern tile levels[ROOMS][MAP_MAX_X][MAP_MAX_Y];
 extern inventory items[52];
+extern GameTime g_time;
 
 typedef enum Direction {
     UP,
@@ -92,10 +98,11 @@ typedef enum Direction {
     DOWNLEFT
 } dir;
 
-tile levels[FLOORS][MAP_MAX_X][MAP_MAX_Y];
+tile levels[ROOMS][MAP_MAX_X][MAP_MAX_Y];
 monster hero;
 object *objects;
 inventory items[52];
+GameTime g_time;
 
 //function definitions
 
@@ -108,6 +115,7 @@ int roll(int dice, int max);
 void init_game();
 void initialize_color();
 void init_hero();
+void init_time();
 void init_windows();
 void quit();
 void update_windows();
@@ -116,14 +124,13 @@ void update_windows();
 void checks(bool moved);
 void impossible(int error);
 void panic(int error);
+void fix_time();
 
 //map.c
 void draw_map(int level);
 void draw_objects(int level);
 void draw_monsters(int level);
 void redraw_screen();
-bool generate_level();
-void generate_room(int segment);
 
 //objects.c
 void create_object(int x, int y, int z, char glyph);

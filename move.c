@@ -41,12 +41,12 @@ bool move_hero(dir a) {
         return false;
     }*/
     switch(levels[hero.z][hero.x][hero.y].type) {
-        case 0:
+        /*case 0:
             wprintw(output, "\nOuch! You bump into solid rock.");
             hero.y = y;
             hero.x = --x;
             moved = false;
-            break;
+            break;*/
         case 6:
         case 7:
             wprintw(output, "\nOuch! You bump into a wall.");

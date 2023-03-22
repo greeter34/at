@@ -13,15 +13,15 @@ void init_hero() { //initialize hero
         hero.x = roll(1, x);
         hero.y = roll(1, y);
         hero.z = 0;
-    } while (levels[hero.z][hero.x][hero.y].walkable != 1);
-    hero.hp = 15;
-    hero.max_hp = 12; //deliberately lower than hp for bug testing
+    } while (1 != 1); //put the hero somewhere. we will hard code this later most likely
+    hero.stamina = 150;
+    hero.max_stamina = 120; //deliberately lower than stamina for bug testing
     wmove(map, hero.y, hero.x);
     return;
 }
 
 void initialize_color() { //initialize color pairings and definitions
-    init_pair(1, COLOR_WHITE, COLOR_BLACK); //default color state for the game
+    init_pair(1, COLOR_BLACK, COLOR_GREEN); //default color state for the game
     init_pair(2, COLOR_YELLOW, COLOR_BLACK); //dirt floor, doors. should be brown ish
     init_pair(3, COLOR_CYAN, COLOR_BLACK); //ice
     init_pair(4, COLOR_GREEN, COLOR_BLACK); //grass floor, trees
@@ -32,7 +32,7 @@ void initialize_color() { //initialize color pairings and definitions
 void init_tiles() { //initialize types of tiles for the map generator to use
     //these are assigned manually so we can label what the represent in the map generator
     //if applicable the glyph for the tile is added afterwards
-    tile_types[0] = ' '; //solid rock
+    tile_types[0] = ' '; //empty ground. green for grass, brown for dirt/path
     tile_types[1] = '#'; //passage way #
     tile_types[2] = '.'; //dirt floor
     tile_types[3] = '.'; //ice floor
@@ -47,6 +47,15 @@ void init_tiles() { //initialize types of tiles for the map generator to use
     tile_types[12] = ACS_LLCORNER; //lower left corner
     tile_types[13] = ACS_LRCORNER; //lower right corner
     return;
+}
+
+void init_time() {
+    g_time.second = 0;
+    g_time.minute = 0;
+    g_time.hour = 6;
+    g_time.day = 1;
+    g_time.month = 0;
+    g_time.year = 1;
 }
 
 void init_game() { //initialize game variables
@@ -74,9 +83,10 @@ void init_game() { //initialize game variables
     init_hero();
     initialize_color();
     init_tiles();
-    for (i = 0; i < 50; i++) {
+    /*for (i = 0; i < 50; i++) {
         been_here[i] = FALSE;
-    }
+    }*/ //this loop not needed with recoding of the game. will probably delete this someday
+    init_time();
     update_windows();
     return;
 }
