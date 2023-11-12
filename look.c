@@ -1,6 +1,8 @@
 #include <curses.h>
 #include "globals.h"
 
+extern monster hero;
+
 void what_is_here(int area_type) { //known bug - function does not output until player moves
     wprintw(output, "\n%s", tile_descs[area_type]);
     update_windows();

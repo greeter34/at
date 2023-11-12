@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "globals.h"
 
+extern monster hero;
+
 void draw_map(int level) {
     char to_print = ' ';
     int iterator_x = 0, iterator_y = 0, x = 0, y = 0;

@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "globals.h"
 
+extern monster hero;
+
 void create_object(int z, int x, int y, char glyph) {
     /* We first increment total objects, so that we reallocate the correct amount of *
      * new space for the object. We decrease immediately afterwards to maniuplate    *

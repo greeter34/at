@@ -2,39 +2,31 @@
 #include <stdlib.h>
 #include "globals.h"
 
+extern monster hero;
+
 void fix_time() {
-    unsigned int iterator = 0;
-    while (g_time.second > 59) {
-        g_time.second -= 60;
-        iterator++;
-    }
-    g_time.minute += iterator;
-    iterator = 0;
-    while (g_time.minute > 59) {
-        g_time.minute -= 60;
-        iterator++;
-    }
-    g_time.hour += iterator;
-    iterator = 0;
-    while (g_time.hour > 23) {
-        g_time.hour -= 24;
-        iterator++;
-    }
-    g_time.day += iterator;
-    g_time.weekday += iterator;
-    if (g_time.weekday > 6) g_time.weekday = 0;
-    iterator = 0;
-    while (g_time.day > 30) {
-        g_time.day -= 30;
-        iterator++;
-    }
-    g_time.month += iterator;
-    iterator = 0;
-    while (g_time.month > 3) {
-        g_time.month -= 4;
-        iterator++;
-    }
-    g_time.year += iterator;
+    // Convert excess seconds to minutes
+    g_time.minute += g_time.second / 60;
+    g_time.second %= 60;
+
+    // Convert excess minutes to hours
+    g_time.hour += g_time.minute / 60;
+    g_time.minute %= 60;
+
+    // Convert excess hours to days
+    g_time.day += g_time.hour / 24;
+    g_time.hour %= 24;
+
+    // Update weekday
+    g_time.weekday = (g_time.weekday + g_time.day) % 7;
+
+    // Convert excess days to months
+    g_time.month += g_time.day / 30;
+    g_time.day %= 30;
+
+    // Adjust months to years (assuming 4 months per year as per original logic)
+    g_time.year += g_time.month / 4;
+    g_time.month %= 4;
 }
 
 void checks(bool moved) {

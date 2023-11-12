@@ -1,5 +1,7 @@
 #include "globals.h"
 
+extern monster hero;
+
 bool move_hero(dir a) {
     int x = 0, y = 0;
     bool moved = true;

@@ -6,6 +6,8 @@
 #include <time.h>
 #include "globals.h"
 
+extern monster hero;
+
 void init_hero() { //initialize hero
     int x = 0, y = 0;
     getmaxyx(map, y, x);

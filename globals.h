@@ -9,27 +9,6 @@
 #define MAP_MAX_Y 80
 #define TTL_TILES 14
 
-//global constants
-
-//global variables
-extern long unsigned int turns, seed, ttl_objects, ttl_monsters;
-extern WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
-extern bool valid; //is an action that advances the number of turns valid?
-//extern char maps[FLOORS][MAP_MAX_X][MAP_MAX_Y];
-extern bool been_here[50];
-extern char tile_types[TTL_TILES];
-extern char tile_descs[TTL_TILES][50];
-
-long unsigned int turns, seed, ttl_objects, ttl_monsters;
-WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
-bool valid;
-//char maps[FLOORS][MAP_MAX_X][MAP_MAX_Y];
-bool been_here[50];
-char tile_types[TTL_TILES];
-char tile_descs[TTL_TILES][50];
-
-//global structure definitions
-
 typedef struct Monster {
     short unsigned int x : 6;
     short unsigned int y : 8;
@@ -85,6 +64,18 @@ typedef struct Time {
     short unsigned int year;
 } GameTime;
 
+
+//global variables
+extern long unsigned int turns, seed, ttl_objects, ttl_monsters;
+extern WINDOW *stats, *map, *output, *stats_border, *map_border, *output_border;
+
+extern bool valid; //is an action that advances the number of turns valid?
+//extern char maps[FLOORS][MAP_MAX_X][MAP_MAX_Y];
+extern bool been_here[50];
+extern char tile_types[TTL_TILES];
+extern char tile_descs[TTL_TILES][50];
+
+//global structure definitions
 //global structures
 extern object *objects;
 extern tile levels[ROOMS][MAP_MAX_X][MAP_MAX_Y];
@@ -101,12 +92,6 @@ typedef enum Direction {
     DOWNRIGHT,
     DOWNLEFT
 } dir;
-
-tile levels[ROOMS][MAP_MAX_X][MAP_MAX_Y];
-monster hero;
-object *objects;
-inventory items[52];
-GameTime g_time;
 
 //function definitions
 
