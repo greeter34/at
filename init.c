@@ -1,6 +1,7 @@
 #include <curses.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 #include <time.h>
 #include "globals.h"
@@ -22,7 +23,7 @@ void init_hero() { //initialize hero
 
 void initialize_color() { //initialize color pairings and definitions
     init_pair(1, COLOR_BLACK, COLOR_GREEN); //default color state for the game
-    init_pair(2, COLOR_YELLOW, COLOR_BLACK); //dirt floor, doors. should be brown ish
+    init_pair(2, COLOR_YELLOW, COLOR_BLACK); //dirt floor, doors, trees. should be brown ish
     init_pair(3, COLOR_CYAN, COLOR_BLACK); //ice
     init_pair(4, COLOR_GREEN, COLOR_BLACK); //grass floor, trees
     init_pair(5, COLOR_BLUE, COLOR_BLACK); //water, fountains
@@ -46,6 +47,16 @@ void init_tiles() { //initialize types of tiles for the map generator to use
     tile_types[11] = ACS_URCORNER; //upper right corner
     tile_types[12] = ACS_LLCORNER; //lower left corner
     tile_types[13] = ACS_LRCORNER; //lower right corner
+    strcpy(tile_descs[0], "Grassland");
+    strcpy(tile_descs[2], "Dirt");
+    strcpy(tile_descs[3], "Ice");
+    strcpy(tile_descs[5], "Water");
+    strcpy(tile_descs[6], "Vertical wall");
+    strcpy(tile_descs[7], "Horizontal wall");
+    strcpy(tile_descs[10], "Corner wall");
+    strcpy(tile_descs[11], "Corner wall");
+    strcpy(tile_descs[12], "Corner wall");
+    strcpy(tile_descs[13], "Corner wall");
     return;
 }
 
@@ -54,6 +65,7 @@ void init_time() {
     g_time.minute = 0;
     g_time.hour = 6;
     g_time.day = 1;
+    g_time.weekday = 0;
     g_time.month = 0;
     g_time.year = 1;
 }

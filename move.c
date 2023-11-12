@@ -32,23 +32,13 @@ bool move_hero(dir a) {
         hero.x--;
         hero.y++;
     }
- /*   wmove(map, hero.y, hero.x);
-    onscreen = winch(map);
-    if (onscreen == ' ') {
-        hero.y = y;
-        hero.x = --x; //not sure why we need to reduce x by one here. if someone can explain this to me please do so
-        wprintw(output, "\nOuch. You bump into solid rock.");
-        return false;
-    }*/
     switch(levels[hero.z][hero.x][hero.y].type) {
-        /*case 0:
-            wprintw(output, "\nOuch! You bump into solid rock.");
-            hero.y = y;
-            hero.x = --x;
-            moved = false;
-            break;*/
         case 6:
         case 7:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
             wprintw(output, "\nOuch! You bump into a wall.");
             hero.y = y;
             hero.x = --x;

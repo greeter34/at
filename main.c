@@ -13,7 +13,7 @@ int roll(int dice, int max) {
 
 char *textual_month (int month) {
     char *month_name = malloc(sizeof(char) * 10);
-    switch (g_time.month) {
+    switch (month) {
         case 0:
             strcpy(month_name, "Spring\0");
             break;
@@ -32,6 +32,56 @@ char *textual_month (int month) {
             break;
     }
     return month_name;
+}
+
+char *textual_weekday (int weekday) {
+    char *day_name = malloc(sizeof(char) * 110);
+    switch (weekday) {
+        case 0:
+            strcpy(day_name, "Sunday\0");
+            break;
+        case 1:
+            strcpy(day_name, "Monday\0");
+            break;
+        case 2:
+            strcpy(day_name, "Tuesday\0");
+            break;
+        case 3:
+            strcpy(day_name, "Wednesday\0");
+            break;
+        case 4:
+            strcpy(day_name, "Thursday\0");
+            break;
+        case 5:
+            strcpy(day_name, "Friday\0");
+            break;
+        default:
+            strcpy(day_name, "Saturday\0");
+            break;
+    }
+    return day_name;
+}
+
+char *ordinal (int month) { //returns the ordinal portion of a number. breaks if number is above 30 or below 1
+    char *ordinal_text = malloc(sizeof(char) * 4);
+    switch(month) {
+        case 1:
+        case 21:
+            strcpy(ordinal_text, "st\0");
+            break;
+        case 2:
+        case 22:
+            strcpy(ordinal_text, "nd\0");
+            break;
+        case 3:
+        case 23:
+            strcpy(ordinal_text, "rd\0");
+            break;
+        default:
+            strcpy(ordinal_text, "th\0");
+            break;
+    }
+    return ordinal_text;
 }
 
 char *fix_small_numbers(int smallnum) {
@@ -87,11 +137,11 @@ void loop() {
     }
     update_windows(); //we can never do this enough with curses apparently
     //non-movement commands
-    /*if (todo == ';') { //far look
+    if (todo == ';') { //far look
         look();
-    }*/
+    }
     if (todo == ':') { //near look
-        what_is_here();
+        what_is_here(levels[hero.z][hero.x][hero.y].type);
     }
     if (todo == ',') { //take
         take();
@@ -101,9 +151,8 @@ void loop() {
     }
     checks(moved);
     mvwprintw(stats, 0, 1, "Stamina:\t%d", hero.stamina);
-    mvwprintw(stats, 1, 1, "%s %d, %d - %d:%s:%s\t", textual_month(g_time.month), g_time.day, g_time.year, g_time.hour, fix_small_numbers(g_time.minute), fix_small_numbers(g_time.second));
-    //mvwprintw(stats, 1, 1, "HP: %d / %d\tGold: BUG", hero.hp, hero.max_hp);
-    wrefresh(stats);
+    mvwprintw(stats, 1, 1, "%s, %s %d%s, %d - %d:%s:%s\t", textual_weekday(g_time.weekday), textual_month(g_time.month), g_time.day, ordinal(g_time.day), g_time.year, g_time.hour, fix_small_numbers(g_time.minute), fix_small_numbers(g_time.second));
+    update_windows();
     //non-movement commands
     if (todo == 'q') { //quit
         quit();

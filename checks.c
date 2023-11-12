@@ -21,6 +21,8 @@ void fix_time() {
         iterator++;
     }
     g_time.day += iterator;
+    g_time.weekday += iterator;
+    if (g_time.weekday > 6) g_time.weekday = 0;
     iterator = 0;
     while (g_time.day > 30) {
         g_time.day -= 30;
@@ -41,7 +43,7 @@ void checks(bool moved) {
     scrollok(output, TRUE);
     if (valid && moved) {
         turns++;
-        g_time.second+= 1; //it takes 1 second to move somewhere else nearby
+        g_time.second += 1; //it takes 1 second to move somewhere else nearby
         fix_time();
         valid = false;
     }
