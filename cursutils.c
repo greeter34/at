@@ -13,7 +13,7 @@ center_line (char *line, WINDOW *window)
   int x = getmaxx(window);
 
   size_t line_len = strnlen(line, x);
-  
+
   if (line_len == x)
     {
       return line;

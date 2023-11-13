@@ -30,7 +30,7 @@ main (int argc, char *argv[])
 
   size_t nlines = sizeof(intro) / sizeof(intro[0]);
   vcenter(nlines, stdscr);
-  
+
   for (size_t i = 0; i < nlines; i++) {
     char *centered_line = center_line(intro[i], stdscr);
     addstr(centered_line);
