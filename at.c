@@ -12,6 +12,7 @@
 #include <curses.h>
 
 #include "cursutils.h"
+#include "layout.h"
 
 int
 main (int argc, char *argv[])
@@ -36,8 +37,11 @@ main (int argc, char *argv[])
     addstr(centered_line);
     free(centered_line);
   }
+  box(stdscr, 0, 0);
   refresh();
   getch();
+
+  layout();
 
   /* Tear curses down */
   curs_set(1); nocbreak(); echo();
