@@ -9,7 +9,10 @@ bool been_here[50];
 char tile_types[TTL_TILES];
 char tile_descs[TTL_TILES][50];
 
-tile levels[MAP_MAX_LEVELS][MAP_MAX_X][MAP_MAX_Y];
+
+
+tile levels[ROOMS][MAP_MAX_X][MAP_MAX_Y];
 monster hero;
 object *objects;
 inventory items[52];
+GameTime g_time;

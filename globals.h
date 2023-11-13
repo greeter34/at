@@ -3,9 +3,10 @@
 #ifndef _GLOBALS
 #define _GLOBALS
 
-#define MAP_MAX_X 20
-#define MAP_MAX_Y 78
-#define MAP_MAX_LEVELS 50
+//rooms is all areas the player can visit. includes character's homes, major buildlings like the player's barn, each level of the mine, etc
+#define ROOMS 38
+#define MAP_MAX_X 25
+#define MAP_MAX_Y 80
 #define TTL_TILES 14
 
 typedef struct Monster {
@@ -13,16 +14,16 @@ typedef struct Monster {
     short unsigned int y : 8;
     short unsigned int z : 8;
     long unsigned int id;
-    unsigned int experience;
-    signed int energy;
-    unsigned int max_energy;
+    unsigned int exp;
+    signed int stamina;
+    unsigned int max_stamina;
     char name[10];
 } monster;
 
 typedef struct Object {
     char name[20];
     char called[50];
-    short unsigned int quantity;
+    short unsigned int amount;
     short unsigned int x : 6;
     short unsigned int y : 8;
     short unsigned int z : 8;
@@ -31,7 +32,6 @@ typedef struct Object {
     char glyph;
     int exists : 1;
     int edible : 1;
-    char beatitude;
 } object;
 
 typedef struct Tile {
@@ -45,15 +45,25 @@ typedef struct Tile {
 } tile;
 
 typedef struct Inventory {
-    int quantity;
+    int amount;
     char name[50]; //name as it should appear in inventory. longer than item name as this can be shown as "uncursed thing" or similar
 } inventory; //array of 52 items for maximum number of inventory slots
 
 typedef struct Coord {
     int y;
     int x;
-    int level;
 } coord;
+
+typedef struct Time {
+    short unsigned int second;
+    short unsigned int minute;
+    short unsigned int hour;
+    short unsigned int day;
+    short unsigned int weekday; //the day of the week
+    short unsigned int month;
+    short unsigned int year;
+} GameTime;
+
 
 //global variables
 extern long unsigned int turns, seed, ttl_objects, ttl_monsters;
@@ -68,8 +78,9 @@ extern char tile_descs[TTL_TILES][50];
 //global structure definitions
 //global structures
 extern object *objects;
-extern tile levels[MAP_MAX_LEVELS][MAP_MAX_X][MAP_MAX_Y];
+extern tile levels[ROOMS][MAP_MAX_X][MAP_MAX_Y];
 extern inventory items[52];
+extern GameTime g_time;
 
 typedef enum Direction {
     UP,
@@ -82,18 +93,20 @@ typedef enum Direction {
     DOWNLEFT
 } dir;
 
+
+
 //function definitions
 
 //main.c
 int main();
 void loop();
-/*char *textual_month(int month);
+char *textual_month(int month);
 char *textual_weekday(int weekday);
 char *ordinal();
-char *fix_small_numbers();*/
+char *fix_small_numbers();
 int roll(int dice, int max);
 
-// //init.c
+//init.c
 void init_game();
 void initialize_color();
 void init_hero();

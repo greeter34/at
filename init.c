@@ -11,14 +11,14 @@ extern monster hero;
 void init_hero() { //initialize hero
     int x = 0, y = 0;
     getmaxyx(map, y, x);
-    hero.experience = 1;
+    hero.exp = 1;
     do {
         hero.x = roll(1, x);
         hero.y = roll(1, y);
         hero.z = 0;
     } while (1 != 1); //put the hero somewhere. we will hard code this later most likely
-    hero.energy = 150;
-    hero.max_energy = 120; //deliberately lower than stamina for bug testing
+    hero.stamina = 150;
+    hero.max_stamina = 120; //deliberately lower than stamina for bug testing
     wmove(map, hero.y, hero.x);
     return;
 }
@@ -62,7 +62,18 @@ void init_tiles() { //initialize types of tiles for the map generator to use
     return;
 }
 
+void init_time() {
+    g_time.second = 0;
+    g_time.minute = 0;
+    g_time.hour = 6;
+    g_time.day = 1;
+    g_time.weekday = 0;
+    g_time.month = 0;
+    g_time.year = 1;
+}
+
 void init_game() { //initialize game variables
+    int i = 0;
     turns = 0;
     ttl_objects = 0;
     ttl_monsters = 0;
@@ -89,6 +100,7 @@ void init_game() { //initialize game variables
     /*for (i = 0; i < 50; i++) {
         been_here[i] = FALSE;
     }*/ //this loop not needed with recoding of the game. will probably delete this someday
+    init_time();
     update_windows();
     return;
 }

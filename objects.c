@@ -24,11 +24,11 @@ void create_object(int z, int x, int y, char glyph) {
     objects[ttl_objects].owner = -1; //-1 is no owner as the ID attribute is unsigned so always positive or 0. this should be for objects on the ground only
     //the following we set to the most common values. they can then be adjusted later if needed
     objects[ttl_objects].edible = 0; //only food is edible
-    objects[ttl_objects].quantity = 1; //only one copy of most objects per space
+    objects[ttl_objects].amount = 1; //only one copy of most objects per space
     //now things might change depending on what the object is
     if (glyph == '$') {
         strcpy(objects[ttl_objects].name, "gold");
-        objects[ttl_objects].quantity = (roll(5, 10) + (hero.experience * hero.experience)); //heros find more money the more experienced they are. will need function to calculate hero's level or this gets unbalanced
+        objects[ttl_objects].amount = (roll(5, 10) + (hero.exp * hero.exp)); //heros find more money the more experienced they are. will need function to calculate hero's level or this gets unbalanced
     }
     if (glyph == '}') {
         strcpy(objects[ttl_objects].name, "fountain");
@@ -103,7 +103,7 @@ void take() {
     for (i = 0; i < ttl_objects; i++) {
         if ((objects[i].z == hero.z) && (objects[i].x == hero.x)) { //if object location = hero location
             if (objects[i].glyph == '$') {
-                wprintw(output, "\nYou add %d gold to your wallet.", objects[i].quantity);
+                wprintw(output, "\nYou add %d gold to your wallet.", objects[i].amount);
                 wrefresh(output);
                 taken = true;
                 destroy_object(i); //gold should always be destroyed on pickup. new gold object can be created later if needed

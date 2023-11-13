@@ -208,7 +208,8 @@ void loop() {
 
         // Post-action checks and UI updates
         checks(moved);
-        mvwprintw(stats, 0, 1, "Energy:\t%d", hero.energy);
+        mvwprintw(stats, 0, 1, "Stamina:\t%d", hero.stamina);
+        mvwprintw(stats, 1, 1, "%s, %s %d%s, %d - %d:%s:%s\t", textual_weekday(g_time.weekday), textual_month(g_time.month), g_time.day, ordinal(g_time.day), g_time.year, g_time.hour, fix_small_numbers(g_time.minute), fix_small_numbers(g_time.second));
         update_windows();
     }
 
