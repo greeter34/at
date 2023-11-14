@@ -13,7 +13,11 @@
 
 #include "cursutils.h"
 #include "layout.h"
+#include "game.h"
 
+/** @todo `stdio` is only included while testing stuff, remove it when
+          done */
+#include <stdio.h>
 int
 main (int argc, char *argv[])
 {
@@ -41,5 +45,17 @@ main (int argc, char *argv[])
   layout();
 
   teardown_curses();
+
+  /**
+   * @todo This part is only used to test out the player
+   *       implementation. Remove when done testing.
+   */
+  struct Player *player = generate_player();
+  printf("Player %s [%c] at (%ld, %ld)\n", player->creature.name,
+	 player->creature.icon,
+	 player->creature.x,
+	 player->creature.y);
+  destroy_player(player);
+
   return EXIT_SUCCESS;
 }
