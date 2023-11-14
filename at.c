@@ -17,10 +17,7 @@
 int
 main (int argc, char *argv[])
 {
-  setlocale(LC_ALL, "");
-  /* Set up curses */
-  initscr(); cbreak(); noecho();
-  curs_set(0);
+  setup_curses();
 
   char intro[][100] = {"Welcome to AT\n",
 		       "AT is an outdoor, survival, roguelike-game with a focus on farming.\n",
@@ -43,9 +40,6 @@ main (int argc, char *argv[])
 
   layout();
 
-  /* Tear curses down */
-  curs_set(1); nocbreak(); echo();
-  delwin(stdscr);
-  endwin();
+  teardown_curses();
   return EXIT_SUCCESS;
 }

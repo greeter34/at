@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <string.h>
-#include <curses.h>
-
 #include "cursutils.h"
 
 /**
@@ -47,4 +43,26 @@ vcenter (size_t nlines, WINDOW *window)
       waddstr(window, "\n");
     }
   return;
+}
+
+/**
+ * @brief Set up curses
+ */
+void
+setup_curses()
+{
+  setlocale(LC_ALL, "");
+  initscr(); cbreak(); noecho();
+  curs_set(0);
+}
+
+/**
+ * @brief Clean up curses stuff when exiting
+ */
+void
+teardown_curses()
+{
+  curs_set(1); nocbreak(); echo();
+  delwin(stdscr);
+  endwin();
 }
