@@ -4,7 +4,8 @@
  * @brief `at` is an outdoor roguelike focused on farming, gathering, and
  *        exploring.
  *
- * This is the main file.
+ * This is the main file, not much is defined here, except the `main`
+ * function.
  */
 
 #include <stdlib.h>
@@ -18,6 +19,12 @@
 /** @todo `stdio` is only included while testing stuff, remove it when
           done */
 #include <stdio.h>
+
+/**
+ * @brief The entrypoint for the whole game.
+ * @param argc    The number of cli arguments
+ * @param argv    The value of the cli arguments
+ */
 int
 main (int argc, char *argv[])
 {

@@ -15,3 +15,7 @@ clean:
 
 test-memory: linux
 	valgrind ./at
+
+.PHONY: docs
+docs:
+	doxygen

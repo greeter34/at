@@ -1,6 +1,12 @@
 # at
-Rogue like farm simulator written in C using curses. This is very much a work in progress currently.
 
-To compile, download all the files, including the makefile. To compile a linux build, simply type make linux. To cross compile from linux to windows 32 bit, use make windows. To make both, use make all.
+Rogue like farm simulator written in C using curses. This is very much
+a work in progress currently.
 
-Join me on IRC. I can be found on LiberaChat in ##at
+To compile, run `make linux`.  We try to make `at` portable, so you
+should probably be able to compile it under BSD/Darwin too.
+
+To compile documentation run `make docs`. You will need the `doxygen`
+package installed.
+
+Join us on IRC. We can be found on LiberaChat in `##at`.

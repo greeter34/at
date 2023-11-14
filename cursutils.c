@@ -1,8 +1,5 @@
 #include "cursutils.h"
 
-/**
- * @brief Given a null-terminated LINE, pad it to get centered on the given WINDOW.
- */
 char *
 center_line (char *line, WINDOW *window)
 {
@@ -17,7 +14,7 @@ center_line (char *line, WINDOW *window)
 
   size_t padding = (x - line_len) / 2;
   size_t final_len = line_len + padding + 1;
-  char *output = calloc(final_len, 1);
+  char *output = calloc(1, final_len);
 
   for (size_t i = 0; i < padding; i++)
     {
@@ -27,11 +24,6 @@ center_line (char *line, WINDOW *window)
   return output;
 }
 
-/**
- * @brief Given a number of LINES, write the number of padding lines
- * needed for the whole text to be vertically centered in a certain
- * WINDOW.
- */
 void
 vcenter (size_t nlines, WINDOW *window)
 {
@@ -45,22 +37,16 @@ vcenter (size_t nlines, WINDOW *window)
   return;
 }
 
-/**
- * @brief Set up curses
- */
 void
-setup_curses()
+setup_curses ()
 {
   setlocale(LC_ALL, "");
   initscr(); cbreak(); noecho();
   curs_set(0);
 }
 
-/**
- * @brief Clean up curses stuff when exiting
- */
 void
-teardown_curses()
+teardown_curses ()
 {
   curs_set(1); nocbreak(); echo();
   delwin(stdscr);
