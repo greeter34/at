@@ -19,3 +19,6 @@ test-memory: linux
 .PHONY: docs
 docs:
 	doxygen
+
+windows:
+	x86_64-w64-mingw32-gcc *.c -o test.exe -lcurses -l:libgcc_eh.a  -l:libstdc++.a
