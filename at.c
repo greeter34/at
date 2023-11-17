@@ -1,11 +1,41 @@
-/**
- * @file at.c
+/** @file at.c
  *
  * @brief `at` is an outdoor roguelike focused on farming, gathering, and
  *        exploring.
  *
  * This is the main file, not much is defined here, except the `main`
  * function.
+ */
+
+/* NOTE: For lack of a better place - at least right now - the mainpage stuff for
+ *       Doxygen is here. I might need to find a better place for it once it
+ *       becomes too long */
+/** @mainpage AT - a roguelike
+ *
+ * @tableofcontents
+ *
+ * @section intro Intro
+ *
+ * AT is a roguelike written in C.
+ *
+ * @section build Build from source
+ *
+ * @subsection build-1 Clone the repository
+ *
+ * Clone the repo to your machine. Make sure you have `make` and `gcc` (or any
+ * other C compiler of choice) installed.
+ *
+ * @subsection build-2 make
+ *
+ * If you're running Linux, use the command `make linux`. The linux target
+ * might work for other *nix OSes, such as *BSD and Darwin. Building on other
+ * *nixes than Linux hasn't been tested.
+ * If you're running Windows, use the command `make windows`.
+ *
+ * @subsection make-docs Generate the documentation locally
+ *
+ * If you plan on hacking on AT, you might want to generate the documentation
+ * locally. Run `make docs`, make sure you have `doxygen` installed.
  */
 
 #include <stdlib.h>
@@ -20,10 +50,9 @@
           done */
 #include <stdio.h>
 
-/**
- * @brief The entrypoint for the whole game.
- * @param argc    The number of cli arguments
- * @param argv    The value of the cli arguments
+/** @brief The entrypoint for the whole game.
+ *  @param argc    The number of cli arguments
+ *  @param argv    The value of the cli arguments
  */
 int
 main (int argc, char *argv[])
