@@ -84,7 +84,7 @@ main (int argc, char *argv[])
   if (!world)
     {
       /* Something went wrong! */
-      destroy_world();
+      destroy_world(world);
       teardown_curses();
       /* TODO: Bubble up the possible error(s) to this point and show
                a better and more helpful error message! */

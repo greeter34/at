@@ -1,5 +1,5 @@
 #include "game.h"
-include "db.h"
+#include "db.h"
 
 struct Player
 *generate_player ()
@@ -8,8 +8,8 @@ struct Player
   player->creature.name = "AT";
   player->creature.icon = '@';
   /* Player always spawns at (0,0) */
-  player->creature.x = 0;
-  player->creature.y = 0;
+  player->creature.coord.x = 0;
+  player->creature.coord.y = 0;
 
   return player;
 }

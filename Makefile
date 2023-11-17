@@ -1,5 +1,5 @@
 CFLAGS := --std=c11 -g -Wall -Werror -Wpedantic $(shell pkg-config --cflags ncurses)
-LDFLAGS := $(shell pkg-config --libs ncurses)
+LDFLAGS := $(shell pkg-config --libs ncurses) $(shell pkg-config --libs sqlite3)
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 

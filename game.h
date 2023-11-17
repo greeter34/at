@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "db.h"
+
 /** @brief A struct representing an (x,y) location */
 struct Coord {
   uint64_t x, y;
@@ -27,7 +29,7 @@ struct Creature {
   char            *name;
   /** The creature single-char representation on the map */
   char            icon;
-  struct Coord coord;
+  struct Coord    coord;
 };
 
 /** @brief A struct describing the player, a kind of Creature */
