@@ -1,4 +1,5 @@
 #include "game.h"
+include "db.h"
 
 struct Player
 *generate_player ()
@@ -9,7 +10,7 @@ struct Player
   /* Player always spawns at (0,0) */
   player->creature.x = 0;
   player->creature.y = 0;
-  
+
   return player;
 }
 
@@ -41,6 +42,12 @@ struct World
   world->map    = generate_map();
   world->player = generate_player();
 
+  world->db     = get_memory_db();
+  if (!world->db)
+    {
+      return NULL;
+    }
+
   return world;
 }
 
@@ -49,5 +56,7 @@ destroy_world (struct World *world)
 {
   destroy_player(world->player);
   destroy_map(world->map);
+  sqlite3_close(world->db);
+
   free(world);
 }

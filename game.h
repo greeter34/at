@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 /** @brief A struct representing an (x,y) location */
-struct Coordinate {
+struct Coord {
   uint64_t x, y;
 };
 
@@ -27,7 +27,7 @@ struct Creature {
   char            *name;
   /** The creature single-char representation on the map */
   char            icon;
-  struct Coordinate coordinate;
+  struct Coord coord;
 };
 
 /** @brief A struct describing the player, a kind of Creature */
@@ -96,9 +96,14 @@ void destroy_map(struct Map *map);
 struct World {
   struct Player *player;
   struct Map    *map;
+  sqlite3       *db;
 };
 
-/** @brief Generate a new world */
+/** @brief Generate a new world
+ *
+ * This returns either a pointer to the newly generated world, or NULL
+ * in case of error
+ */
 struct World *generate_world ();
 
 /** @brief Free up the memory used by a world

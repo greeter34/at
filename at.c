@@ -81,6 +81,17 @@ main (int argc, char *argv[])
   layout();
 
   struct World *world = generate_world();
+  if (!world)
+    {
+      /* Something went wrong! */
+      destroy_world();
+      teardown_curses();
+      /* TODO: Bubble up the possible error(s) to this point and show
+               a better and more helpful error message! */
+      printf("Failed to generate the world!\n");
+
+      return EXIT_FAILURE;
+    }
   destroy_world(world);
 
   teardown_curses();
