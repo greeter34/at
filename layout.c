@@ -1,9 +1,5 @@
 #include "layout.h"
 
-/**
- * @brief: Set up a mock of the final layout, show it, wait for an
- * input and tear down the layout.
- */
 void
 layout ()
 {
