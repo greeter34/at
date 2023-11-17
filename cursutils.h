@@ -1,5 +1,4 @@
-/**
- * @file cursutils.h
+/** @file cursutils.h
  *
  * @brief some utilities built around ncurses.
  *
@@ -14,8 +13,7 @@
 #include <string.h>
 #include <curses.h>
 
-/**
- * @brief Given a null-terminated LINE, pad it to get centered on the
+/** @brief Given a null-terminated LINE, pad it to get centered on the
  *        given WINDOW.
  *
  * @param line a null-terminated string to be centered
@@ -24,8 +22,7 @@
  */
 char *center_line(char* line, WINDOW* window);
 
-/**
- * @brief Given a number of lines, write the number of padding lines
+/** @brief Given a number of lines, write the number of padding lines
  * needed for the whole text to be vertically centered in a certain
  * window.
  *
@@ -36,13 +33,11 @@ char *center_line(char* line, WINDOW* window);
 void vcenter(size_t nlines, WINDOW* window);
 
 
-/**
- * @brief Set up curses
+/** @brief Set up curses
  */
 void setup_curses();
 
-/**
- * @brief Clean up curses stuff when exiting
+/** @brief Clean up curses stuff when exiting
  */
 void teardown_curses();
 
