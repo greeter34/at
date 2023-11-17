@@ -80,18 +80,10 @@ main (int argc, char *argv[])
 
   layout();
 
-  teardown_curses();
+  struct World *world = generate_world();
+  destroy_world(world);
 
-  /**
-   * @todo This part is only used to test out the player
-   *       implementation. Remove when done testing.
-   */
-  struct Player *player = generate_player();
-  printf("Player %s [%c] at (%ld, %ld)\n", player->creature.name,
-	 player->creature.icon,
-	 player->creature.x,
-	 player->creature.y);
-  destroy_player(player);
+  teardown_curses();
 
   return EXIT_SUCCESS;
 }
