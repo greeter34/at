@@ -54,6 +54,13 @@ struct World
       return NULL;
     }
 
+  /** @todo Continue from here! I need to set the map's members to
+            generate the right amount of locations. Afterwards, show
+            the locations (and the player) on the map window and
+            figure out how to refresh the screen and how to react to a
+            change of terminal size (which will also require a map
+            redraw, and possibly to generate some new locations) */
+
   generate_locations (world);
 
   return world;
