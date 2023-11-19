@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "db.h"
 
@@ -63,13 +64,15 @@ struct Location {
 				 */
 };
 
-/** @brief A struct describing the visible map */
+/** @brief A struct describing the visible map
+ */
 struct Map {
-  uint16_t        width;        /* The current width of the map */
-  uint16_t        height;       /* The current height of the map */
-  struct Location *locations;   /* Locations array, kept up-to-date to
-                                   store x*y locations with (x + (y*x))
-                                   offset */
+  uint16_t        width;         /* The current width of the map */
+  uint16_t        height;        /* The current height of the map */
+  struct Location *locations;    /* Locations array, kept up-to-date to
+                                    store x*y locations with (x + (y*x))
+                                    offset */
+  bool            dirty;	 /* Wether we need to re-calculate stuff */
 };
 
 /** @brief Generate a new Map
@@ -86,10 +89,6 @@ struct Map *generate_map();
 void destroy_map(struct Map *map);
 
 /** @brief A struct describing the visible game world
- *
- * @todo Find a good way to handle the game world/map that:
- *       1) makes for efficient retrival of location data
- *       2) makes for efficient generation of location data when needed
  *
  * This struct only contains the visible part of the map, as well as a
  * reference to the player.
@@ -113,5 +112,8 @@ struct World *generate_world ();
  *  @param world the world to free
  */
 void destroy_world(struct World *world);
+
+/** @brief Generate the visible locations, if needed */
+void generate_locations (struct World *world);
 
 #endif
