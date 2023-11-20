@@ -42,6 +42,7 @@ setup_curses ()
 {
   setlocale(LC_ALL, "");
   initscr(); cbreak(); noecho();
+  keypad(stdscr, TRUE); 
   curs_set(0);
 }
 

@@ -10,12 +10,13 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <curses.h>
 
 #include "db.h"
 
 /** @brief A struct representing an (x,y) location */
 struct Coord {
-  uint64_t x, y;
+  int64_t x, y;
 };
 
 /** @brief A struct describing a creature (player, monsters, NPCs,
@@ -51,7 +52,7 @@ void destroy_player(struct Player *player);
 
 /** @brief A struct describing a location on the map */
 struct Location {
-  struct Coord cood;
+  struct Coord coord;
   uint8_t      attributes;      /* Attributes (bit field):
 				 * - 2^0:
 				 * - 2^1:
@@ -67,12 +68,12 @@ struct Location {
 /** @brief A struct describing the visible map
  */
 struct Map {
-  uint16_t        width;         /* The current width of the map */
-  uint16_t        height;        /* The current height of the map */
-  struct Location *locations;    /* Locations array, kept up-to-date to
-                                    store x*y locations with (x + (y*x))
-                                    offset */
-  bool            dirty;	 /* Wether we need to re-calculate stuff */
+  uint16_t          width;         /* The current width of the map */
+  uint16_t          height;        /* The current height of the map */
+  struct Location **locations;     /* Locations array, kept up-to-date to
+                                      store x*y locations with (x + (y*x))
+                                      offset */
+  bool              dirty;	   /* Wether we need to re-calculate stuff */
 };
 
 /** @brief Generate a new Map

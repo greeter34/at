@@ -8,8 +8,8 @@ struct Player
   player->creature.name = "AT";
   player->creature.icon = '@';
   /* Player always spawns at (0,0) */
-  player->creature.coord.x = 0;
-  player->creature.coord.y = 0;
+  player->creature.coord.x = 1;
+  player->creature.coord.y = 1;
 
   return player;
 }
@@ -24,8 +24,6 @@ struct Map
 *generate_map ()
 {
   struct Map *map = calloc (1, sizeof (struct Map));
-  map->width = 80;
-  map->height = 40;
   return map;
 }
 
@@ -34,6 +32,10 @@ destroy_map (struct Map *map)
 {
   if (map->locations)
     {
+      for (int x = 0; x < map->width; x++)
+	{
+	      free (map->locations[x]);
+	}
       free (map->locations);
     }
   free (map);
@@ -79,6 +81,28 @@ destroy_world (struct World *world)
 void
 generate_locations (struct World *world)
 {
+  world->map->locations = calloc (world->map->width,
+				  sizeof (struct Location *));
+  if (!world->map->locations)
+    {
+      wclear (stdscr);
+      waddstr (stdscr, "ERROR WHEN ALLOCATING LOCATIONS ARRAY!");
+      wrefresh (stdscr);
+      getch();
+    }
+  for (int x = 0; x < world->map->width; x++)
+    {
+      world->map->locations[x] = calloc (world->map->height,
+					 sizeof (struct Location));
+      if (!world->map->locations[x])
+	{
+	  wclear (stdscr);
+	  waddstr (stdscr, "ERROR WHEN ALLOCATING LOCATIONS ARRAY!");
+	  wrefresh (stdscr);
+	  getch();
+	}
+    }
+
   struct Coord min_coord, max_coord;
   struct Coord player_coord = world->player->creature.coord;
   uint16_t width = world->map->width;
@@ -124,10 +148,15 @@ generate_locations (struct World *world)
       map_coord.x = x + (width / 2);
       map_coord.y = y + (height / 2);
       locations[map_coord.x + (map_coord.y * map_coord.x)] = 1;
-      
+
+      /* Insert the current location in the locations array in the
+       * Map and populate its coord member */
+      world->map->locations[map_coord.x][map_coord.y].coord.x = x;
+      world->map->locations[map_coord.x][map_coord.y].coord.y = y;
+  
       step = sqlite3_step(stmt);
     }
-
+  
   /* Generate all unknown locations */
   sqlite3_exec(world->db, "BEGIN TRANSACTION", NULL, NULL, NULL);
   for (uint64_t x = 0; x < width; x++)
@@ -154,6 +183,11 @@ generate_locations (struct World *world)
 
 	      sqlite3_step (insert_stmt);
 	      sqlite3_finalize (insert_stmt);
+
+	      /* Insert the newly generated location in the locations
+	       * array in the Map and populate its coord memeber */
+	      world->map->locations[x][y].coord.x = world_coord.x;
+	      world->map->locations[x][y].coord.y = world_coord.y;
 	    }
 	}
     }

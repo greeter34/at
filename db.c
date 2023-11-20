@@ -27,7 +27,10 @@ sqlite3
   char *query;
 
   /* Setup the `locations' table */
-  query = "CREATE TABLE locations (x INTEGER NOT NULL, y INTEGER NOT NULL, PRIMARY KEY(x,y))";
+  query = "CREATE TABLE locations "
+    "(x INTEGER NOT NULL, "
+    "y INTEGER NOT NULL, "
+    "PRIMARY KEY(x,y))";
   rc = sqlite3_prepare_v2(db, query, -1, &stmt, NULL);
   if (rc != SQLITE_OK)
     {

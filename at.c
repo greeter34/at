@@ -78,8 +78,6 @@ main (int argc, char *argv[])
   refresh();
   getch();
 
-  layout();
-
   struct World *world = generate_world();
   if (!world)
     {
@@ -92,6 +90,98 @@ main (int argc, char *argv[])
 
       return EXIT_FAILURE;
     }
+
+  /* Main game loop */
+  /** @todo Eventually move this to its own function */
+  bool running = true;
+
+  WINDOW *journal = NULL;
+  WINDOW *map = NULL;
+  WINDOW *info = NULL;
+  setup_layout(&journal, &map, &info);
+
+  while (running)
+    {
+      /* Show current location in the journal */
+      window_box_title (journal, "JOURNAL");
+      mvwprintw (journal, 1, 1, "You are at (%ld,%ld)", world->player->creature.coord.x, world->player->creature.coord.y);
+      wrefresh (journal);
+
+      /* REFRESH MAP */
+      window_box_title (map, "MAP");
+      int width, height;
+      getmaxyx (map, height, width);
+
+      /* Account for the borders */
+      world->map->width = width - 2;
+      world->map->height = height - 2;
+
+      mvwprintw (map, 1, 1, "Map dimensions: %dx%d",
+		 world->map->width,
+		 world->map->height);
+      wrefresh (map);
+      generate_locations (world);
+
+      for (int x = 0; x < world->map->width; x++)
+	{
+	  for (int y = 0; y < world->map->height; y++)
+	    {
+	      struct Coord world_coord = world->map->locations[x][y].coord;
+	      struct Coord player_coord = world->player->creature.coord;
+	      char tile;
+	      if (world_coord.x == player_coord.x && world_coord.y == player_coord.y)
+		{
+		  tile = '@';
+		}
+	      else
+		{
+		  tile = '.';
+		}
+	      mvwprintw(map, y+1, x+1, "%c", tile);
+	      
+	    }
+	}
+      wrefresh (map);
+      
+      /* COMMAND INTERPRETATION */
+      int input = getch();
+      switch (input) {
+	/* QUIT */
+      case 'q':
+	/** @todo Implement a "are you sure?" prompt before exiting */
+	running = false;
+	break;
+      case 'h':
+	world->player->creature.coord.x -= 1;
+	break;
+      case 'l':
+	world->player->creature.coord.x += 1;
+	break;
+      case 'j':
+	world->player->creature.coord.y += 1;
+	break;
+      case 'k':
+	world->player->creature.coord.y -= 1;
+	break;
+      case ':':
+	window_box_title (info, "PROMPT");
+	mvwaddstr (info, 1, 1, "PROMPT mode not implemented yet!");
+	wrefresh (info);
+	break;
+      case '?':
+	window_box_title (info, "HELP");
+	mvwaddstr (info, 1, 1, "Press '?' for help, 'q' to quit and ':' for command prompt");
+	wrefresh (info);
+	break;
+      default:
+	window_box_title (info, "INFO");
+	mvwprintw (info, 1, 1, "You inserted the unkown command: %c   ", input);
+	wrefresh (info);
+	break;
+      }
+    }
+
+  delwin(journal); delwin(map); delwin(info);
   destroy_world(world);
 
   teardown_curses();

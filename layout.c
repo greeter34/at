@@ -1,31 +1,32 @@
 #include "layout.h"
 
 void
-layout ()
+setup_layout (WINDOW **journal, WINDOW **map, WINDOW **info)
 {
   clear();
   refresh();
   int x, y;
   getmaxyx(stdscr, y, x);
 
-  int journal_height = 4;
-  int info_height    = 4;
+  int journal_height = 7;
+  int info_height    = 3;
   int map_height     = y - journal_height - info_height;
 
-  WINDOW *journal = newwin(journal_height, x, 0, 0);
-  box(journal, 0, 0);
-  mvwaddstr(journal, 0, 4, "[JOURNAL]");
-  wrefresh(journal);
-  WINDOW *map = newwin(map_height, x, journal_height, 0);
-  box(map, 0, 0);
-  mvwaddstr(map, 0, 4, "[MAP]");
-  wrefresh(map);
-  WINDOW *info = newwin(info_height, x, y - info_height, 0);
-  box(info, 0, 0);
-  mvwaddstr(info, 0, 4, "[INFO]");
-  wrefresh(info);
-  refresh();
+  *journal = newwin(journal_height, x, 0, 0);
+  window_box_title (*journal, "JOURNAL");
+  *map = newwin(map_height, x, journal_height, 0);
+  window_box_title (*map, "MAP");
+  *info = newwin(info_height, x, y - info_height, 0);
+  window_box_title (*info, "INFO");
+  /* refresh(); */
 
-  getch();
-  delwin(journal); delwin(map); delwin(info);
+}
+
+void
+window_box_title (WINDOW *win, char *title)
+{
+  wclear (win);
+  box (win, 0, 0);
+  mvwprintw (win, 0, 4, "[%s]", title);
+  wrefresh (win);
 }
